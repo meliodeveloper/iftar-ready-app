@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import Index from "./pages/Index";
+import Profile from "./pages/Profile";
 import PrayerTimes from "./pages/PrayerTimes";
 import Mosques from "./pages/Mosques";
 import HalalFood from "./pages/HalalFood";
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/mosques" element={<Mosques />} />
             <Route path="/halal-food" element={<HalalFood />} />
             <Route path="/calendar" element={<RamadanCalendar />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <BottomNav />

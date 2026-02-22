@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import CountdownTimer from "@/components/CountdownTimer";
 import MosqueCard from "@/components/MosqueCard";
+import AvatarButton from "@/components/AvatarButton";
 import { mockMosques, mockPrayerTimes } from "@/lib/mockData";
 import heroImage from "@/assets/ramadan-hero.jpg";
 
@@ -21,6 +22,9 @@ export default function Index() {
       <div className="relative h-52 overflow-hidden">
         <img src={heroImage} alt="Ramadan night" className="absolute inset-0 w-full h-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
+        <div className="absolute top-10 right-5 z-20">
+          <AvatarButton />
+        </div>
         <div className="relative z-10 flex flex-col items-center justify-end h-full pb-4 px-5">
           <Moon className="w-8 h-8 text-primary mb-2 animate-pulse-gold" />
           <h1 className="text-2xl font-display font-bold text-gradient-gold">Ramadan Companion</h1>
