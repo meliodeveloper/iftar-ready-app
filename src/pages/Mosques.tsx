@@ -18,25 +18,25 @@ export default function Mosques() {
     <div className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
       <PageHeader title="Mosques" subtitle="Find mosques near you" />
 
-      <div className="px-5 space-y-4">
+      <div className="px-5 space-y-3">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search mosques..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-secondary/50 border border-border/50 rounded-xl pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+            className="ios-input pl-10"
           />
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {filtered.map((mosque, i) => (
             <motion.div
               key={mosque.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
+              transition={{ delay: i * 0.06 }}
             >
               <MosqueCard
                 mosque={mosque}
@@ -49,8 +49,8 @@ export default function Mosques() {
 
         {filtered.length === 0 && (
           <div className="text-center py-10">
-            <p className="text-muted-foreground text-sm">No mosques found</p>
-            <p className="text-xs text-muted-foreground mt-1">Try a different search term</p>
+            <p className="text-muted-foreground text-[15px]">No mosques found</p>
+            <p className="text-[13px] text-muted-foreground mt-1">Try a different search term</p>
           </div>
         )}
       </div>

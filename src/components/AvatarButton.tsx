@@ -10,7 +10,7 @@ export default function AvatarButton() {
     <button
       onClick={() => navigate("/profile")}
       aria-label="Open profile and settings"
-      className="w-9 h-9 rounded-full bg-card/80 backdrop-blur-xl border border-border/50 flex items-center justify-center text-sm font-semibold text-primary hover:ring-1 hover:ring-primary/40 transition-all shrink-0"
+      className="w-9 h-9 rounded-full bg-secondary border border-border flex items-center justify-center text-sm font-semibold text-primary hover:bg-secondary/80 active:scale-95 transition-all shrink-0"
     >
       {initial}
     </button>

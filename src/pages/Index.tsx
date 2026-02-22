@@ -20,24 +20,24 @@ export default function Index() {
     <div className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
       {/* Hero */}
       <div className="relative h-52 overflow-hidden">
-        <img src={heroImage} alt="Ramadan night" className="absolute inset-0 w-full h-full object-cover opacity-40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background" />
-        <div className="absolute top-10 right-5 z-20">
+        <img src={heroImage} alt="Ramadan night" className="absolute inset-0 w-full h-full object-cover opacity-30 dark:opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
+        <div className="absolute top-12 right-5 z-20">
           <AvatarButton />
         </div>
         <div className="relative z-10 flex flex-col items-center justify-end h-full pb-4 px-5">
           <Moon className="w-8 h-8 text-primary mb-2 animate-pulse-gold" />
           <h1 className="text-2xl font-display font-bold text-gradient-gold">Ramadan Companion</h1>
-          <p className="text-xs text-muted-foreground mt-1">Your guide through the blessed month</p>
+          <p className="text-[13px] text-muted-foreground mt-1">Your guide through the blessed month</p>
         </div>
       </div>
 
-      <div className="px-5 space-y-5 mt-4">
+      <div className="px-5 space-y-4 mt-4">
         {/* Location */}
         <motion.div {...fadeIn} transition={{ delay: 0.1 }} className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-primary" />
-          <span className="text-sm text-foreground">London, UK</span>
-          <button className="text-xs text-primary font-medium ml-auto">Change</button>
+          <span className="text-[15px] text-foreground">London, UK</span>
+          <button className="text-[13px] text-primary font-semibold ml-auto">Change</button>
         </motion.div>
 
         {/* Countdown */}
@@ -47,22 +47,22 @@ export default function Index() {
 
         {/* Today's Fasting Times */}
         <motion.div {...fadeIn} transition={{ delay: 0.3 }} className="glass-card p-4">
-          <h3 className="text-sm font-semibold text-foreground mb-3">Today's Fasting Times</h3>
+          <h3 className="text-[15px] font-semibold text-foreground mb-3">Today's Fasting Times</h3>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-secondary/50 rounded-lg p-3 text-center">
+            <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Fast Begins</p>
               <p className="text-xl font-bold text-foreground mt-1">{mockPrayerTimes.fajr}</p>
-              <p className="text-[10px] text-primary mt-0.5">Fajr</p>
+              <p className="text-[11px] text-primary font-medium mt-0.5">Fajr</p>
             </div>
-            <div className="bg-secondary/50 rounded-lg p-3 text-center">
+            <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Fast Ends</p>
               <p className="text-xl font-bold text-foreground mt-1">{mockPrayerTimes.maghrib}</p>
-              <p className="text-[10px] text-primary mt-0.5">Maghrib / Iftar</p>
+              <p className="text-[11px] text-primary font-medium mt-0.5">Maghrib / Iftar</p>
             </div>
           </div>
           <button
             onClick={() => navigate("/prayer-times")}
-            className="flex items-center justify-center gap-1 w-full mt-3 py-2 rounded-lg bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+            className="flex items-center justify-center gap-1 w-full mt-3 py-2.5 rounded-xl bg-primary/10 text-primary text-[15px] font-semibold active:bg-primary/20 transition-colors"
           >
             View full prayer timetable <ChevronRight className="w-4 h-4" />
           </button>
@@ -71,8 +71,8 @@ export default function Index() {
         {/* Nearest Mosque */}
         <motion.div {...fadeIn} transition={{ delay: 0.4 }}>
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-foreground">Nearest Mosque</h3>
-            <button onClick={() => navigate("/mosques")} className="text-xs text-primary font-medium">
+            <h3 className="text-[15px] font-semibold text-foreground">Nearest Mosque</h3>
+            <button onClick={() => navigate("/mosques")} className="text-[13px] text-primary font-semibold">
               View all
             </button>
           </div>

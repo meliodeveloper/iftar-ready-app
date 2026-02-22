@@ -33,23 +33,23 @@ export default function CountdownTimer() {
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center gap-3"
     >
-      <p className="text-sm text-muted-foreground">{target.sublabel}</p>
+      <p className="text-[13px] text-muted-foreground">{target.sublabel}</p>
       <h2 className="text-lg font-semibold text-gradient-gold font-display">
         Countdown to {target.label}
       </h2>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {[
           { value: pad(timeLeft.hours), label: "Hours" },
           { value: pad(timeLeft.minutes), label: "Min" },
           { value: pad(timeLeft.seconds), label: "Sec" },
         ].map((unit, i) => (
           <div key={i} className="flex flex-col items-center">
-            <div className="countdown-ring w-[72px] h-[72px] flex items-center justify-center bg-secondary/50">
+            <div className="countdown-ring w-[72px] h-[72px] flex items-center justify-center bg-secondary/60 dark:bg-secondary/50">
               <span className="text-2xl font-bold text-primary tabular-nums">
                 {unit.value}
               </span>
             </div>
-            <span className="text-[10px] text-muted-foreground mt-1">{unit.label}</span>
+            <span className="text-[10px] text-muted-foreground mt-1.5">{unit.label}</span>
           </div>
         ))}
       </div>

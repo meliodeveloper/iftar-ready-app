@@ -7,17 +7,21 @@ import { mockMosques } from "@/lib/mockData";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="glass-card p-4 space-y-4">
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-primary">{title}</h3>
-      {children}
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 pt-3.5 pb-1">
+        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-primary">{title}</h3>
+      </div>
+      <div className="px-4 pb-4 space-y-3.5 mt-1">
+        {children}
+      </div>
     </div>
   );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between gap-3">
-      <span className="text-sm text-foreground">{label}</span>
+    <div className="ios-row">
+      <span className="text-[15px] text-foreground">{label}</span>
       {children}
     </div>
   );
@@ -29,13 +33,13 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${
-        checked ? "bg-primary" : "bg-secondary"
+      className={`relative w-[51px] h-[31px] rounded-full transition-colors shrink-0 ${
+        checked ? "bg-primary" : "bg-muted-foreground/30"
       }`}
     >
       <span
-        className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-foreground transition-transform ${
-          checked ? "translate-x-5 bg-primary-foreground" : "bg-muted-foreground"
+        className={`absolute top-[2px] left-[2px] w-[27px] h-[27px] rounded-full bg-white shadow-sm transition-transform ${
+          checked ? "translate-x-5" : ""
         }`}
       />
     </button>
@@ -44,15 +48,15 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 
 function SegmentedControl<T extends string>({ options, value, onChange }: { options: { label: string; value: T }[]; value: T; onChange: (v: T) => void }) {
   return (
-    <div className="flex bg-secondary/50 rounded-lg p-0.5 gap-0.5">
+    <div className="flex bg-secondary rounded-lg p-0.5 gap-0.5">
       {options.map((opt) => (
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+          className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all ${
             value === opt.value
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground"
+              ? "bg-card text-foreground shadow-sm"
+              : "text-muted-foreground"
           }`}
         >
           {opt.label}
@@ -78,7 +82,6 @@ export default function Profile() {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [locationDenied, setLocationDenied] = useState(false);
 
-  // Check location permission
   useEffect(() => {
     if ("permissions" in navigator) {
       navigator.permissions.query({ name: "geolocation" }).then((result) => {
@@ -88,7 +91,6 @@ export default function Profile() {
     }
   }, []);
 
-  // Apply theme
   useEffect(() => {
     const root = document.documentElement;
     if (settings.themePreference === "dark") {
@@ -106,30 +108,28 @@ export default function Profile() {
   return (
     <div className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
       {/* Header */}
-      <div className="pt-12 pb-4 px-5 flex items-center gap-3">
+      <div className="pt-14 pb-3 px-5 flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
-          className="w-9 h-9 rounded-full bg-secondary/50 flex items-center justify-center"
+          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform"
         >
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
         <h1 className="text-2xl font-display font-bold text-gradient-gold">Profile</h1>
       </div>
 
-      <div className="px-5 space-y-4">
+      <div className="px-5 space-y-3.5">
         {/* Location denied banner */}
         {locationDenied && (
-          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-3 flex items-center gap-3 border-warning/30">
+          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-3.5 flex items-center gap-3">
             <MapPinOff className="w-5 h-5 text-warning shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground">Location access denied</p>
-              <p className="text-xs text-muted-foreground">Enable GPS for accurate prayer times & nearby mosques.</p>
+              <p className="text-[15px] font-medium text-foreground">Location access denied</p>
+              <p className="text-[13px] text-muted-foreground">Enable GPS for accurate prayer times.</p>
             </div>
             <button
-              onClick={() => {
-                navigator.geolocation.getCurrentPosition(() => {}, () => {});
-              }}
-              className="shrink-0 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold"
+              onClick={() => navigator.geolocation.getCurrentPosition(() => {}, () => {})}
+              className="shrink-0 px-3.5 py-1.5 rounded-full bg-primary text-primary-foreground text-[13px] font-semibold active:scale-95 transition-transform"
             >
               Enable
             </button>
@@ -140,13 +140,13 @@ export default function Profile() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
           <Section title="Account">
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">Display Name</label>
+              <label className="text-[13px] text-muted-foreground mb-1 block">Display Name</label>
               <input
                 type="text"
                 value={settings.displayName}
                 onChange={(e) => update({ displayName: e.target.value })}
                 placeholder="Your name"
-                className="w-full bg-secondary/50 border border-border/50 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+                className="ios-input"
               />
             </div>
             <Field label="Location mode">
@@ -161,13 +161,13 @@ export default function Profile() {
             </Field>
             {settings.locationMode === "manual" && (
               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}>
-                <label className="text-xs text-muted-foreground mb-1 block">City / Postcode</label>
+                <label className="text-[13px] text-muted-foreground mb-1 block">City / Postcode</label>
                 <input
                   type="text"
                   value={settings.manualLocation}
                   onChange={(e) => update({ manualLocation: e.target.value })}
                   placeholder="e.g. London, E1"
-                  className="w-full bg-secondary/50 border border-border/50 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+                  className="ios-input"
                 />
               </motion.div>
             )}
@@ -178,14 +178,14 @@ export default function Profile() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <Section title="Ramadan & Prayer">
             <div>
-              <span className="text-sm text-foreground block mb-1">Default Mosque</span>
+              <span className="text-[15px] text-foreground block mb-1">Default Mosque</span>
               <button
                 onClick={() => navigate("/mosques")}
-                className="w-full flex items-center justify-between bg-secondary/50 rounded-lg px-3 py-2.5"
+                className="w-full flex items-center justify-between bg-secondary rounded-xl px-3.5 py-2.5 active:bg-secondary/80 transition-colors"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <MapPin className="w-4 h-4 text-primary shrink-0" />
-                  <span className="text-sm text-foreground truncate">
+                  <span className="text-[15px] text-foreground truncate">
                     {selectedMosque?.name ?? "None selected"}
                   </span>
                 </div>
@@ -194,11 +194,11 @@ export default function Profile() {
             </div>
 
             <div>
-              <span className="text-xs text-muted-foreground block mb-1">Calculation fallback</span>
+              <span className="text-[13px] text-muted-foreground block mb-1">Calculation fallback</span>
               <select
                 value={settings.calcMethod}
                 onChange={(e) => update({ calcMethod: e.target.value as CalcMethod })}
-                className="w-full bg-secondary/50 border border-border/50 rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+                className="ios-input appearance-none"
               >
                 {calcMethods.map((m) => (
                   <option key={m.value} value={m.value}>{m.label}</option>
@@ -240,9 +240,9 @@ export default function Profile() {
             {settings.notifEnabled && (
               <>
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-foreground">Pre-iftar alert</span>
-                    <span className="text-xs text-primary font-semibold tabular-nums">{settings.preIftarMinutes} min</span>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[15px] text-foreground">Pre-iftar alert</span>
+                    <span className="text-[13px] text-primary font-semibold tabular-nums">{settings.preIftarMinutes} min</span>
                   </div>
                   <input
                     type="range"
@@ -253,7 +253,7 @@ export default function Profile() {
                     onChange={(e) => update({ preIftarMinutes: Number(e.target.value) })}
                     className="w-full accent-primary"
                   />
-                  <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <div className="flex justify-between text-[11px] text-muted-foreground mt-0.5">
                     <span>15 min</span><span>120 min</span>
                   </div>
                 </div>
@@ -270,9 +270,9 @@ export default function Profile() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <Section title="Food Discovery">
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-foreground">Search radius</span>
-                <span className="text-xs text-primary font-semibold tabular-nums">{settings.foodRadiusKm} km</span>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[15px] text-foreground">Search radius</span>
+                <span className="text-[13px] text-primary font-semibold tabular-nums">{settings.foodRadiusKm} km</span>
               </div>
               <input
                 type="range"
@@ -283,7 +283,7 @@ export default function Profile() {
                 onChange={(e) => update({ foodRadiusKm: Number(e.target.value) })}
                 className="w-full accent-primary"
               />
-              <div className="flex justify-between text-[10px] text-muted-foreground">
+              <div className="flex justify-between text-[11px] text-muted-foreground mt-0.5">
                 <span>1 km</span><span>20 km</span>
               </div>
             </div>
@@ -295,9 +295,9 @@ export default function Profile() {
               <Toggle checked={settings.verifiedOnly} onChange={(v) => update({ verifiedOnly: v })} />
             </Field>
 
-            <div className="flex items-start gap-2 p-2 rounded-lg bg-secondary/30 text-[11px] text-muted-foreground">
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-secondary text-[12px] text-muted-foreground">
               <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-              <p><strong className="text-foreground">Verified</strong> = matched halal database. <strong className="text-foreground">Suggested</strong> = Google listing match.</p>
+              <p><strong className="text-foreground font-medium">Verified</strong> = matched halal database. <strong className="text-foreground font-medium">Suggested</strong> = Google listing match.</p>
             </div>
           </Section>
         </motion.div>
@@ -317,11 +317,11 @@ export default function Profile() {
               />
             </Field>
 
-            <div className="flex flex-col gap-2">
+            <div className="divide-y divide-border rounded-xl bg-secondary overflow-hidden -mx-0.5">
               {["About", "Privacy Policy", "Terms of Service"].map((item) => (
-                <button key={item} className="flex items-center justify-between py-1.5 text-sm text-foreground hover:text-primary transition-colors">
+                <button key={item} className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground active:bg-muted transition-colors">
                   {item}
-                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
+                  <ExternalLink className="w-4 h-4 text-muted-foreground" />
                 </button>
               ))}
             </div>
@@ -329,23 +329,23 @@ export default function Profile() {
             {!showClearConfirm ? (
               <button
                 onClick={() => setShowClearConfirm(true)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-destructive/10 text-destructive text-sm font-medium hover:bg-destructive/20 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-destructive/10 text-destructive text-[15px] font-medium active:bg-destructive/20 transition-colors"
               >
                 <Trash2 className="w-4 h-4" /> Clear cached data
               </button>
             ) : (
-              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 space-y-3">
-                <p className="text-sm text-foreground">This will reset all settings to defaults. Are you sure?</p>
+              <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 space-y-3">
+                <p className="text-[15px] text-foreground">This will reset all settings to defaults. Are you sure?</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => { clearCache(); setShowClearConfirm(false); }}
-                    className="flex-1 py-2 rounded-lg bg-destructive text-destructive-foreground text-sm font-medium"
+                    className="flex-1 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-[15px] font-semibold active:opacity-80 transition-opacity"
                   >
                     Confirm
                   </button>
                   <button
                     onClick={() => setShowClearConfirm(false)}
-                    className="flex-1 py-2 rounded-lg bg-secondary text-foreground text-sm font-medium"
+                    className="flex-1 py-2.5 rounded-xl bg-secondary text-foreground text-[15px] font-medium active:opacity-80 transition-opacity"
                   >
                     Cancel
                   </button>
