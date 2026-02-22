@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, ChevronRight, Trash2, ExternalLink, Info } from "lucide-react";
+import { ArrowLeft, MapPin, ChevronRight, Trash2, ExternalLink, Info, MapPinOff } from "lucide-react";
 import { useSettings, type CalcMethod, type Madhab, type TimeFormat, type ThemePreference, type LocationMode } from "@/lib/settingsStore";
 import { mockMosques } from "@/lib/mockData";
 
@@ -76,6 +76,30 @@ export default function Profile() {
   const update = useSettings((s) => s.update);
   const clearCache = useSettings((s) => s.clearCache);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [locationDenied, setLocationDenied] = useState(false);
+
+  // Check location permission
+  useEffect(() => {
+    if ("permissions" in navigator) {
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        setLocationDenied(result.state === "denied");
+        result.onchange = () => setLocationDenied(result.state === "denied");
+      }).catch(() => {});
+    }
+  }, []);
+
+  // Apply theme
+  useEffect(() => {
+    const root = document.documentElement;
+    if (settings.themePreference === "dark") {
+      root.classList.add("dark");
+    } else if (settings.themePreference === "light") {
+      root.classList.remove("dark");
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.classList.toggle("dark", prefersDark);
+    }
+  }, [settings.themePreference]);
 
   const selectedMosque = mockMosques.find((m) => m.id === settings.selectedMosqueId);
 
@@ -93,6 +117,25 @@ export default function Profile() {
       </div>
 
       <div className="px-5 space-y-4">
+        {/* Location denied banner */}
+        {locationDenied && (
+          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-3 flex items-center gap-3 border-warning/30">
+            <MapPinOff className="w-5 h-5 text-warning shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground">Location access denied</p>
+              <p className="text-xs text-muted-foreground">Enable GPS for accurate prayer times & nearby mosques.</p>
+            </div>
+            <button
+              onClick={() => {
+                navigator.geolocation.getCurrentPosition(() => {}, () => {});
+              }}
+              className="shrink-0 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold"
+            >
+              Enable
+            </button>
+          </motion.div>
+        )}
+
         {/* Account */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
           <Section title="Account">
