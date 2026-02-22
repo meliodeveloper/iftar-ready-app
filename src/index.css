@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
-  :root {
+  .dark {
     --background: 222 47% 6%;
     --foreground: 45 20% 95%;
 
@@ -55,6 +55,44 @@
     --warning-foreground: 35 90% 10%;
     --verified: 150 60% 45%;
     --suggested: 35 90% 55%;
+  }
+
+  .light {
+    --background: 40 30% 97%;
+    --foreground: 222 47% 11%;
+    --card: 40 20% 95%;
+    --card-foreground: 222 47% 11%;
+    --popover: 40 20% 95%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 43 90% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 15% 90%;
+    --secondary-foreground: 222 30% 20%;
+    --muted: 40 10% 92%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 30 80% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 15% 85%;
+    --input: 40 15% 85%;
+    --ring: 43 90% 45%;
+    --gold-glow: 0 0 20px hsl(43 90% 45% / 0.15);
+    --card-glow: 0 0 15px hsl(40 20% 90% / 0.3);
+    --sidebar-background: 40 20% 95%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 43 90% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 40 15% 90%;
+    --sidebar-accent-foreground: 222 30% 20%;
+    --sidebar-border: 40 15% 85%;
+    --sidebar-ring: 43 90% 45%;
+    --success: 150 60% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 35 90% 50%;
+    --warning-foreground: 35 90% 10%;
+    --verified: 150 60% 38%;
+    --suggested: 35 90% 50%;
   }
 }
 
