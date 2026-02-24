@@ -16,7 +16,7 @@ const prayers = [
 export default function PrayerTimes() {
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
-      <PageHeader title="Prayer Times" subtitle="Today's schedule" />
+      <PageHeader title="Prayer Times" subtitle="Today's schedule" backTo="/" />
       
       <div className="px-5 space-y-4">
         <div className="flex items-center gap-2 text-[13px] text-muted-foreground">

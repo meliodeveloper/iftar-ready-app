@@ -1,11 +1,10 @@
-import { Home, MapPin, Utensils, Calendar, Clock } from "lucide-react";
+import { Home, MapPin, Utensils, Calendar } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { spring } from "@/lib/motion";
 
 const navItems = [
   { path: "/", icon: Home, label: "Home" },
-  { path: "/prayer-times", icon: Clock, label: "Times" },
   { path: "/mosques", icon: MapPin, label: "Mosques" },
   { path: "/halal-food", icon: Utensils, label: "Halal" },
   { path: "/calendar", icon: Calendar, label: "Calendar" },
