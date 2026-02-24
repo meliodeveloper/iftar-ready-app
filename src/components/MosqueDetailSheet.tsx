@@ -14,7 +14,7 @@ export default function MosqueDetailSheet({ mosque, open, onClose }: MosqueDetai
 
   const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(mosque.name)}&ll=${mosque.lat},${mosque.lng}`;
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${mosque.lat},${mosque.lng}&query_place_id=${encodeURIComponent(mosque.name)}`;
-  const embedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${mosque.lng - 0.008},${mosque.lat - 0.005},${mosque.lng + 0.008},${mosque.lat + 0.005}&layer=mapnik&marker=${mosque.lat},${mosque.lng}`;
+  const mapImageUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${mosque.lat},${mosque.lng}&zoom=16&size=800x600&markers=${mosque.lat},${mosque.lng},ol-marker`;
 
   return (
     <AnimatePresence>
@@ -27,12 +27,11 @@ export default function MosqueDetailSheet({ mosque, open, onClose }: MosqueDetai
           className="fixed inset-0 z-50 flex flex-col bg-background"
         >
           {/* Full-screen map */}
-          <div className="flex-1 relative">
-            <iframe
-              src={embedUrl}
-              className="absolute inset-0 w-full h-full border-0"
-              title={`Map of ${mosque.name}`}
-              loading="lazy"
+          <div className="flex-1 relative bg-muted">
+            <img
+              src={mapImageUrl}
+              alt={`Map showing ${mosque.name}`}
+              className="absolute inset-0 w-full h-full object-cover"
             />
 
             {/* Top bar — collapse button */}
