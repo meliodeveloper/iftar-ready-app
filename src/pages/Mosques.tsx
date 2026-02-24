@@ -4,6 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import MosqueCard from "@/components/MosqueCard";
 import { mockMosques, type Mosque } from "@/lib/mockData";
 import { Search } from "lucide-react";
+import { pageTransitionProps, staggerContainer, staggerItem } from "@/lib/motion";
 
 export default function Mosques() {
   const [selected, setSelected] = useState<string>(mockMosques[0].id);
@@ -15,10 +16,10 @@ export default function Mosques() {
   );
 
   return (
-    <div className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
       <PageHeader title="Mosques" subtitle="Find mosques near you" />
 
-      <div className="px-5 space-y-3">
+      <div className="px-5 space-y-4">
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
@@ -30,14 +31,14 @@ export default function Mosques() {
           />
         </div>
 
-        <div className="space-y-2.5">
-          {filtered.map((mosque, i) => (
-            <motion.div
-              key={mosque.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-            >
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+          className="space-y-2.5"
+        >
+          {filtered.map((mosque) => (
+            <motion.div key={mosque.id} variants={staggerItem}>
               <MosqueCard
                 mosque={mosque}
                 selected={selected === mosque.id}
@@ -45,7 +46,7 @@ export default function Mosques() {
               />
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {filtered.length === 0 && (
           <div className="text-center py-10">
@@ -54,6 +55,6 @@ export default function Mosques() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

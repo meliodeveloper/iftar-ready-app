@@ -1,6 +1,23 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { getCountdownTarget } from "@/lib/mockData";
+
+function AnimatedDigit({ value }: { value: string }) {
+  return (
+    <AnimatePresence mode="popLayout">
+      <motion.span
+        key={value}
+        initial={{ y: 8, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -8, opacity: 0 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="text-2xl font-bold text-primary tabular-nums inline-block"
+      >
+        {value}
+      </motion.span>
+    </AnimatePresence>
+  );
+}
 
 export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -28,11 +45,7 @@ export default function CountdownTimer() {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center gap-3"
-    >
+    <div className="flex flex-col items-center gap-3">
       <p className="text-[13px] text-muted-foreground">{target.sublabel}</p>
       <h2 className="text-lg font-semibold text-gradient-gold font-display">
         Countdown to {target.label}
@@ -44,15 +57,13 @@ export default function CountdownTimer() {
           { value: pad(timeLeft.seconds), label: "Sec" },
         ].map((unit, i) => (
           <div key={i} className="flex flex-col items-center">
-            <div className="countdown-ring w-[72px] h-[72px] flex items-center justify-center bg-secondary/60 dark:bg-secondary/50">
-              <span className="text-2xl font-bold text-primary tabular-nums">
-                {unit.value}
-              </span>
+            <div className="countdown-ring w-[72px] h-[72px] flex items-center justify-center">
+              <AnimatedDigit value={unit.value} />
             </div>
             <span className="text-[10px] text-muted-foreground mt-1.5">{unit.label}</span>
           </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 }

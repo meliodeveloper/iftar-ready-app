@@ -4,6 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import VenueCard from "@/components/VenueCard";
 import { mockHalalVenues } from "@/lib/mockData";
 import { Search, Info } from "lucide-react";
+import { pageTransitionProps, staggerContainer, staggerItem, pressable } from "@/lib/motion";
 
 const cuisines = ["All", "Pakistani", "Indian", "Lebanese", "Middle Eastern"];
 
@@ -20,22 +21,18 @@ export default function HalalFood() {
   });
 
   return (
-    <div className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
       <PageHeader title="Halal Food" subtitle="Discover halal spots near you" />
 
-      <div className="px-5 space-y-3">
+      <div className="px-5 space-y-4">
         {/* Iftar banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card p-3.5 flex items-center gap-3"
-        >
+        <div className="glass-card p-3.5 flex items-center gap-3">
           <span className="text-2xl">🌙</span>
           <div>
             <p className="text-[15px] font-semibold text-primary">Iftar soon!</p>
             <p className="text-[13px] text-muted-foreground">Browse halal spots for your iftar meal</p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Search */}
         <div className="relative">
@@ -52,33 +49,34 @@ export default function HalalFood() {
         {/* Cuisine filters */}
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-5 px-5 scrollbar-hide">
           {cuisines.map((c) => (
-            <button
+            <motion.button
               key={c}
+              {...pressable}
               onClick={() => setCuisine(c)}
               className={`shrink-0 ios-pill ${
                 cuisine === c
                   ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground active:bg-secondary/80"
+                  : "bg-secondary text-muted-foreground"
               }`}
             >
               {c}
-            </button>
+            </motion.button>
           ))}
         </div>
 
         {/* Venues */}
-        <div className="space-y-2.5">
-          {filtered.map((venue, i) => (
-            <motion.div
-              key={venue.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-            >
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+          className="space-y-2.5"
+        >
+          {filtered.map((venue) => (
+            <motion.div key={venue.id} variants={staggerItem}>
               <VenueCard venue={venue} />
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {filtered.length === 0 && (
           <div className="text-center py-10">
@@ -92,6 +90,6 @@ export default function HalalFood() {
           <p>"Suggested" venues may serve halal food but are not independently verified. Please confirm directly with the restaurant.</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
