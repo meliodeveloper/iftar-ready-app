@@ -47,8 +47,19 @@ export default function Index() {
         </motion.div>
 
         {/* Today's Fasting Times */}
-        <motion.div variants={staggerItem} className="glass-card p-4">
-          <h3 className="text-[15px] font-semibold text-foreground mb-3">Today's Fasting Times</h3>
+        <motion.div
+          variants={staggerItem}
+          {...pressable}
+          onClick={() => navigate("/prayer-times")}
+          className="glass-card p-4 cursor-pointer"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-[15px] font-semibold text-foreground">Today's Fasting Times</h3>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-muted-foreground">Timetable</span>
+              <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Fast Begins</p>
@@ -61,13 +72,6 @@ export default function Index() {
               <p className="text-[11px] text-primary font-medium mt-0.5">Maghrib / Iftar</p>
             </div>
           </div>
-          <motion.button
-            {...pressable}
-            onClick={() => navigate("/prayer-times")}
-            className="flex items-center justify-center gap-1 w-full mt-3 py-2.5 rounded-xl bg-primary/10 text-primary text-[15px] font-semibold transition-colors"
-          >
-            View full prayer timetable <ChevronRight className="w-4 h-4" />
-          </motion.button>
         </motion.div>
 
         {/* Nearest Mosque */}
