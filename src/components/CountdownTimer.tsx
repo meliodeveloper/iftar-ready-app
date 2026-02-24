@@ -7,11 +7,11 @@ function AnimatedDigit({ value }: { value: string }) {
     <AnimatePresence mode="popLayout">
       <motion.span
         key={value}
-        initial={{ y: 8, opacity: 0 }}
+        initial={{ y: 6, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -8, opacity: 0 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="text-2xl font-bold text-primary tabular-nums inline-block"
+        exit={{ y: -6, opacity: 0 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+        className="inline-block"
       >
         {value}
       </motion.span>
@@ -45,25 +45,24 @@ export default function CountdownTimer() {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <p className="text-[13px] text-muted-foreground">{target.sublabel}</p>
-      <h2 className="text-lg font-semibold text-gradient-gold font-display">
-        Countdown to {target.label}
-      </h2>
-      <div className="flex items-center gap-4">
-        {[
-          { value: pad(timeLeft.hours), label: "Hours" },
-          { value: pad(timeLeft.minutes), label: "Min" },
-          { value: pad(timeLeft.seconds), label: "Sec" },
-        ].map((unit, i) => (
-          <div key={i} className="flex flex-col items-center">
-            <div className="countdown-ring w-[72px] h-[72px] flex items-center justify-center">
-              <AnimatedDigit value={unit.value} />
-            </div>
-            <span className="text-[10px] text-muted-foreground mt-1.5">{unit.label}</span>
-          </div>
-        ))}
+    <div className="flex flex-col items-center">
+      <p className="text-xs text-muted-foreground tracking-wide uppercase">
+        {target.label}
+      </p>
+      <div className="flex items-baseline gap-1 mt-2">
+        <span className="text-[40px] font-bold text-primary tabular-nums leading-none tracking-tight">
+          <AnimatedDigit value={pad(timeLeft.hours)} />
+        </span>
+        <span className="text-xl text-muted-foreground font-light mx-0.5">:</span>
+        <span className="text-[40px] font-bold text-primary tabular-nums leading-none tracking-tight">
+          <AnimatedDigit value={pad(timeLeft.minutes)} />
+        </span>
+        <span className="text-xl text-muted-foreground font-light mx-0.5">:</span>
+        <span className="text-[40px] font-bold text-primary tabular-nums leading-none tracking-tight">
+          <AnimatedDigit value={pad(timeLeft.seconds)} />
+        </span>
       </div>
+      <p className="text-[11px] text-muted-foreground mt-1">{target.sublabel}</p>
     </div>
   );
 }
