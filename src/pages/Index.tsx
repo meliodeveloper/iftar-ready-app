@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { MapPin, ChevronRight, Moon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -11,6 +12,7 @@ import heroImage from "@/assets/ramadan-hero.jpg";
 export default function Index() {
   const navigate = useNavigate();
   const nearest = mockMosques[0];
+  const [mosqueExpanded, setMosqueExpanded] = useState(false);
 
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
@@ -82,7 +84,12 @@ export default function Index() {
               View all
             </button>
           </div>
-          <MosqueCard mosque={nearest} compact />
+          <MosqueCard
+            mosque={nearest}
+            compact
+            expanded={mosqueExpanded}
+            onToggle={() => setMosqueExpanded(!mosqueExpanded)}
+          />
         </motion.div>
       </motion.div>
     </motion.div>
