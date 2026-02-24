@@ -13,6 +13,7 @@ export type CalcMethod =
 export type Madhab = "shafi" | "hanafi";
 
 export interface UserSettings {
+  onboardingComplete: boolean;
   displayName: string;
   locationMode: LocationMode;
   manualLocation: string;
@@ -35,6 +36,7 @@ interface SettingsStore extends UserSettings {
 }
 
 const defaults: UserSettings = {
+  onboardingComplete: false,
   displayName: "",
   locationMode: "auto",
   manualLocation: "",
