@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, MotionConfig } from "framer-motion";
 import BottomNav from "@/components/BottomNav";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
@@ -14,25 +15,36 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+function AnimatedRoutes() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Index />} />
+        <Route path="/prayer-times" element={<PrayerTimes />} />
+        <Route path="/mosques" element={<Mosques />} />
+        <Route path="/halal-food" element={<HalalFood />} />
+        <Route path="/calendar" element={<RamadanCalendar />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <div className="max-w-md mx-auto min-h-screen relative">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/prayer-times" element={<PrayerTimes />} />
-            <Route path="/mosques" element={<Mosques />} />
-            <Route path="/halal-food" element={<HalalFood />} />
-            <Route path="/calendar" element={<RamadanCalendar />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <BottomNav />
-        </div>
-      </BrowserRouter>
+      <MotionConfig reducedMotion="user">
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="max-w-md mx-auto min-h-screen relative">
+            <AnimatedRoutes />
+            <BottomNav />
+          </div>
+        </BrowserRouter>
+      </MotionConfig>
     </TooltipProvider>
   </QueryClientProvider>
 );

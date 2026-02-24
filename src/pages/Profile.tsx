@@ -4,12 +4,13 @@ import { motion } from "framer-motion";
 import { ArrowLeft, MapPin, ChevronRight, Trash2, ExternalLink, Info, MapPinOff } from "lucide-react";
 import { useSettings, type CalcMethod, type Madhab, type TimeFormat, type ThemePreference, type LocationMode } from "@/lib/settingsStore";
 import { mockMosques } from "@/lib/mockData";
+import { pageTransitionProps, staggerContainer, staggerItem, pressable, spring } from "@/lib/motion";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="glass-card overflow-hidden">
       <div className="px-4 pt-3.5 pb-1">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-primary">{title}</h3>
+        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{title}</h3>
       </div>
       <div className="px-4 pb-4 space-y-3.5 mt-1">
         {children}
@@ -33,14 +34,15 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative w-[51px] h-[31px] rounded-full transition-colors shrink-0 ${
+      className={`relative w-[51px] h-[31px] rounded-full transition-colors duration-200 shrink-0 ${
         checked ? "bg-primary" : "bg-muted-foreground/30"
       }`}
     >
-      <span
-        className={`absolute top-[2px] left-[2px] w-[27px] h-[27px] rounded-full bg-white shadow-sm transition-transform ${
-          checked ? "translate-x-5" : ""
-        }`}
+      <motion.span
+        layout
+        transition={spring}
+        className="absolute top-[2px] w-[27px] h-[27px] rounded-full bg-white shadow-sm"
+        style={{ left: checked ? 22 : 2 }}
       />
     </button>
   );
@@ -53,7 +55,7 @@ function SegmentedControl<T extends string>({ options, value, onChange }: { opti
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all ${
+          className={`relative px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors duration-200 ${
             value === opt.value
               ? "bg-card text-foreground shadow-sm"
               : "text-muted-foreground"
@@ -106,38 +108,45 @@ export default function Profile() {
   const selectedMosque = mockMosques.find((m) => m.id === settings.selectedMosqueId);
 
   return (
-    <div className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
       {/* Header */}
       <div className="pt-14 pb-3 px-5 flex items-center gap-3">
-        <button
+        <motion.button
+          {...pressable}
           onClick={() => navigate(-1)}
-          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform"
+          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center"
         >
           <ArrowLeft className="w-5 h-5 text-foreground" />
-        </button>
+        </motion.button>
         <h1 className="text-2xl font-display font-bold text-gradient-gold">Profile</h1>
       </div>
 
-      <div className="px-5 space-y-3.5">
+      <motion.div
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+        className="px-5 space-y-4"
+      >
         {/* Location denied banner */}
         {locationDenied && (
-          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-3.5 flex items-center gap-3">
+          <motion.div variants={staggerItem} className="glass-card p-3.5 flex items-center gap-3">
             <MapPinOff className="w-5 h-5 text-warning shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-[15px] font-medium text-foreground">Location access denied</p>
               <p className="text-[13px] text-muted-foreground">Enable GPS for accurate prayer times.</p>
             </div>
-            <button
+            <motion.button
+              {...pressable}
               onClick={() => navigator.geolocation.getCurrentPosition(() => {}, () => {})}
-              className="shrink-0 px-3.5 py-1.5 rounded-full bg-primary text-primary-foreground text-[13px] font-semibold active:scale-95 transition-transform"
+              className="shrink-0 px-3.5 py-1.5 rounded-full bg-primary text-primary-foreground text-[13px] font-semibold"
             >
               Enable
-            </button>
+            </motion.button>
           </motion.div>
         )}
 
         {/* Account */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+        <motion.div variants={staggerItem}>
           <Section title="Account">
             <div>
               <label className="text-[13px] text-muted-foreground mb-1 block">Display Name</label>
@@ -160,7 +169,7 @@ export default function Profile() {
               />
             </Field>
             {settings.locationMode === "manual" && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} transition={{ duration: 0.2 }}>
                 <label className="text-[13px] text-muted-foreground mb-1 block">City / Postcode</label>
                 <input
                   type="text"
@@ -175,13 +184,14 @@ export default function Profile() {
         </motion.div>
 
         {/* Ramadan & Prayer */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        <motion.div variants={staggerItem}>
           <Section title="Ramadan & Prayer">
             <div>
               <span className="text-[15px] text-foreground block mb-1">Default Mosque</span>
-              <button
+              <motion.button
+                {...pressable}
                 onClick={() => navigate("/mosques")}
-                className="w-full flex items-center justify-between bg-secondary rounded-xl px-3.5 py-2.5 active:bg-secondary/80 transition-colors"
+                className="w-full flex items-center justify-between bg-secondary rounded-xl px-3.5 py-2.5 transition-colors"
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <MapPin className="w-4 h-4 text-primary shrink-0" />
@@ -190,7 +200,7 @@ export default function Profile() {
                   </span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
-              </button>
+              </motion.button>
             </div>
 
             <div>
@@ -231,7 +241,7 @@ export default function Profile() {
         </motion.div>
 
         {/* Notifications */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+        <motion.div variants={staggerItem}>
           <Section title="Notifications">
             <Field label="Enable notifications">
               <Toggle checked={settings.notifEnabled} onChange={(v) => update({ notifEnabled: v })} />
@@ -267,7 +277,7 @@ export default function Profile() {
         </motion.div>
 
         {/* Food discovery */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <motion.div variants={staggerItem}>
           <Section title="Food Discovery">
             <div>
               <div className="flex items-center justify-between mb-1.5">
@@ -303,7 +313,7 @@ export default function Profile() {
         </motion.div>
 
         {/* App */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+        <motion.div variants={staggerItem}>
           <Section title="App">
             <Field label="Theme">
               <SegmentedControl<ThemePreference>
@@ -319,42 +329,53 @@ export default function Profile() {
 
             <div className="divide-y divide-border rounded-xl bg-secondary overflow-hidden -mx-0.5">
               {["About", "Privacy Policy", "Terms of Service"].map((item) => (
-                <button key={item} className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground active:bg-muted transition-colors">
+                <motion.button
+                  key={item}
+                  {...pressable}
+                  className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
+                >
                   {item}
                   <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                </button>
+                </motion.button>
               ))}
             </div>
 
             {!showClearConfirm ? (
-              <button
+              <motion.button
+                {...pressable}
                 onClick={() => setShowClearConfirm(true)}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-destructive/10 text-destructive text-[15px] font-medium active:bg-destructive/20 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-destructive/10 text-destructive text-[15px] font-medium transition-colors"
               >
                 <Trash2 className="w-4 h-4" /> Clear cached data
-              </button>
+              </motion.button>
             ) : (
-              <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 space-y-3">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 space-y-3"
+              >
                 <p className="text-[15px] text-foreground">This will reset all settings to defaults. Are you sure?</p>
                 <div className="flex gap-2">
-                  <button
+                  <motion.button
+                    {...pressable}
                     onClick={() => { clearCache(); setShowClearConfirm(false); }}
-                    className="flex-1 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-[15px] font-semibold active:opacity-80 transition-opacity"
+                    className="flex-1 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-[15px] font-semibold"
                   >
                     Confirm
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    {...pressable}
                     onClick={() => setShowClearConfirm(false)}
-                    className="flex-1 py-2.5 rounded-xl bg-secondary text-foreground text-[15px] font-medium active:opacity-80 transition-opacity"
+                    className="flex-1 py-2.5 rounded-xl bg-secondary text-foreground text-[15px] font-medium"
                   >
                     Cancel
-                  </button>
+                  </motion.button>
                 </div>
-              </div>
+              </motion.div>
             )}
           </Section>
         </motion.div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -2,27 +2,31 @@ import { motion } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import { mockRamadanCalendar } from "@/lib/mockData";
 import { Star } from "lucide-react";
+import { pageTransitionProps, staggerContainer, staggerItem } from "@/lib/motion";
 
 export default function RamadanCalendar() {
   const todayDay = 5;
 
   return (
-    <div className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
       <PageHeader title="Ramadan Calendar" subtitle="30 days of blessings" />
 
       <div className="px-5">
-        <div className="glass-card overflow-hidden divide-y divide-border">
-          {mockRamadanCalendar.map((day, i) => {
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+          className="glass-card overflow-hidden divide-y divide-border"
+        >
+          {mockRamadanCalendar.map((day) => {
             const isToday = day.day === todayDay;
             const isPast = day.day < todayDay;
             return (
               <motion.div
                 key={day.day}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: Math.min(i * 0.025, 0.4) }}
+                variants={staggerItem}
                 className={`px-4 py-3 flex items-center gap-3 ${
-                  isToday ? "bg-primary/5 dark:bg-primary/10" : ""
+                  isToday ? "bg-primary/5 dark:bg-primary/8" : ""
                 } ${isPast ? "opacity-50" : ""}`}
               >
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 ${
@@ -55,8 +59,8 @@ export default function RamadanCalendar() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
