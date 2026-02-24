@@ -28,18 +28,20 @@ export default function BottomNav() {
               transition={spring}
               className="relative flex flex-col items-center justify-center gap-0.5 w-14 h-full"
             >
-              {isActive && (
-                <motion.div
-                  layoutId="nav-indicator"
-                  className="absolute -top-px left-3 right-3 h-0.5 rounded-full bg-primary"
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+              <div className="relative flex items-center justify-center w-8 h-8">
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-full bg-primary/12"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  />
+                )}
+                <item.icon
+                  className={`relative w-[20px] h-[20px] transition-colors duration-200 ${
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  }`}
                 />
-              )}
-              <item.icon
-                className={`w-[20px] h-[20px] transition-colors duration-200 ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`}
-              />
+              </div>
               <span
                 className={`text-[10px] font-medium transition-colors duration-200 ${
                   isActive ? "text-primary" : "text-muted-foreground"
