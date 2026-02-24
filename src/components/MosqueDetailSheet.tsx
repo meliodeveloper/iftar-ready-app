@@ -1,6 +1,7 @@
 import { MapPin, Navigation, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Mosque } from "@/lib/mockData";
+import StaticOsmMap from "@/components/StaticOsmMap";
 import { pressable } from "@/lib/motion";
 
 interface MosqueDetailSheetProps {
@@ -14,7 +15,6 @@ export default function MosqueDetailSheet({ mosque, open, onClose }: MosqueDetai
 
   const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(mosque.name)}&ll=${mosque.lat},${mosque.lng}`;
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${mosque.lat},${mosque.lng}&query_place_id=${encodeURIComponent(mosque.name)}`;
-  const mapImageUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${mosque.lat},${mosque.lng}&zoom=16&size=800x600&markers=${mosque.lat},${mosque.lng},ol-marker`;
 
   return (
     <AnimatePresence>
@@ -28,11 +28,7 @@ export default function MosqueDetailSheet({ mosque, open, onClose }: MosqueDetai
         >
           {/* Full-screen map */}
           <div className="flex-1 relative bg-muted">
-            <img
-              src={mapImageUrl}
-              alt={`Map showing ${mosque.name}`}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <StaticOsmMap lat={mosque.lat} lng={mosque.lng} label={mosque.name} />
 
             {/* Top bar — collapse button */}
             <div className="absolute top-0 left-0 right-0 p-4 flex items-center z-10">
