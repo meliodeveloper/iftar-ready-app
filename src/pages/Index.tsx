@@ -82,7 +82,7 @@ export default function Index() {
               View all
             </button>
           </div>
-          <MosqueCard mosque={nearest} selected compact />
+          <MosqueCard mosque={nearest} compact />
         </motion.div>
       </motion.div>
     </motion.div>

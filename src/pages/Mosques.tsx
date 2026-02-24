@@ -2,15 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import MosqueCard from "@/components/MosqueCard";
-import MosqueDetailSheet from "@/components/MosqueDetailSheet";
 import { mockMosques, type Mosque } from "@/lib/mockData";
 import { Search } from "lucide-react";
 import { pageTransitionProps, staggerContainer, staggerItem } from "@/lib/motion";
 
 export default function Mosques() {
-  const [selected, setSelected] = useState<string>(mockMosques[0].id);
+  const [expanded, setExpanded] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [sheetMosque, setSheetMosque] = useState<Mosque | null>(null);
 
   const filtered = mockMosques.filter((m) =>
     m.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -43,11 +41,8 @@ export default function Mosques() {
             <motion.div key={mosque.id} variants={staggerItem}>
               <MosqueCard
                 mosque={mosque}
-                selected={selected === mosque.id}
-                onSelect={(m: Mosque) => {
-                  setSelected(m.id);
-                  setSheetMosque(m);
-                }}
+                expanded={expanded === mosque.id}
+                onToggle={(m: Mosque) => setExpanded(expanded === m.id ? null : m.id)}
               />
             </motion.div>
           ))}
@@ -60,12 +55,6 @@ export default function Mosques() {
           </div>
         )}
       </div>
-
-      <MosqueDetailSheet
-        mosque={sheetMosque}
-        open={!!sheetMosque}
-        onClose={() => setSheetMosque(null)}
-      />
     </motion.div>
   );
 }
