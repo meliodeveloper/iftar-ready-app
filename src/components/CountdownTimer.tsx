@@ -45,22 +45,24 @@ export default function CountdownTimer() {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <p className="text-[13px] text-muted-foreground">{target.sublabel}</p>
-      <h2 className="text-lg font-semibold text-gradient-gold font-display">
+    <div className="flex flex-col items-center gap-2">
+      <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
+        {target.sublabel}
+      </p>
+      <h2 className="text-[15px] font-semibold text-foreground">
         Countdown to {target.label}
       </h2>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 mt-1">
         {[
-          { value: pad(timeLeft.hours), label: "Hours" },
-          { value: pad(timeLeft.minutes), label: "Min" },
-          { value: pad(timeLeft.seconds), label: "Sec" },
+          { value: pad(timeLeft.hours), label: "HR" },
+          { value: pad(timeLeft.minutes), label: "MIN" },
+          { value: pad(timeLeft.seconds), label: "SEC" },
         ].map((unit, i) => (
-          <div key={i} className="flex flex-col items-center">
-            <div className="countdown-ring w-[72px] h-[72px] flex items-center justify-center">
+          <div key={i} className="flex flex-col items-center gap-1">
+            <div className="w-[60px] h-[60px] rounded-2xl bg-secondary flex items-center justify-center">
               <AnimatedDigit value={unit.value} />
             </div>
-            <span className="text-[10px] text-muted-foreground mt-1.5">{unit.label}</span>
+            <span className="text-[10px] font-medium text-muted-foreground tracking-wide">{unit.label}</span>
           </div>
         ))}
       </div>
