@@ -8,11 +8,20 @@ import AvatarButton from "@/components/AvatarButton";
 import { mockMosques, mockPrayerTimes } from "@/lib/mockData";
 import { pageTransitionProps, staggerContainer, staggerItem, pressable } from "@/lib/motion";
 import heroImage from "@/assets/ramadan-hero.jpg";
+import { useGeolocation } from "@/hooks/useGeolocation";
+import { useNearbyMosques } from "@/hooks/useNearbyPlaces";
 
 export default function Index() {
   const navigate = useNavigate();
-  const nearest = mockMosques[0];
   const [mosqueExpanded, setMosqueExpanded] = useState(false);
+
+  const { position } = useGeolocation();
+  const { data: liveMosques } = useNearbyMosques(
+    position?.lat ?? null,
+    position?.lng ?? null
+  );
+
+  const nearest = liveMosques && liveMosques.length > 0 ? liveMosques[0] : mockMosques[0];
 
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
@@ -39,7 +48,9 @@ export default function Index() {
         {/* Location */}
         <motion.div variants={staggerItem} className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-primary" />
-          <span className="text-[15px] text-foreground">London, UK</span>
+          <span className="text-[15px] text-foreground">
+            {position ? `${position.lat.toFixed(2)}°N, ${position.lng.toFixed(2)}°W` : "London, UK"}
+          </span>
           <button className="text-[13px] text-primary font-semibold ml-auto">Change</button>
         </motion.div>
 
