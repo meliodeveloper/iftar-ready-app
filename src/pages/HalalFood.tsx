@@ -3,8 +3,10 @@ import { motion } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import VenueCard from "@/components/VenueCard";
 import { mockHalalVenues } from "@/lib/mockData";
-import { Search, Info } from "lucide-react";
+import { Search, Info, Loader2, WifiOff } from "lucide-react";
 import { pageTransitionProps, staggerContainer, staggerItem, pressable } from "@/lib/motion";
+import { useGeolocation } from "@/hooks/useGeolocation";
+import { useNearbyHalalVenues } from "@/hooks/useNearbyPlaces";
 
 const cuisines = ["All", "Pakistani", "Indian", "Lebanese", "Middle Eastern"];
 
@@ -12,7 +14,15 @@ export default function HalalFood() {
   const [search, setSearch] = useState("");
   const [cuisine, setCuisine] = useState("All");
 
-  const filtered = mockHalalVenues.filter((v) => {
+  const { position } = useGeolocation();
+  const { data: liveVenues, isLoading, isError } = useNearbyHalalVenues(
+    position?.lat ?? null,
+    position?.lng ?? null
+  );
+
+  const venues = liveVenues && liveVenues.length > 0 ? liveVenues : mockHalalVenues;
+
+  const filtered = venues.filter((v) => {
     const matchesSearch =
       v.name.toLowerCase().includes(search.toLowerCase()) ||
       v.cuisine.toLowerCase().includes(search.toLowerCase());
@@ -25,6 +35,13 @@ export default function HalalFood() {
       <PageHeader title="Halal Food" subtitle="Discover halal spots near you" />
 
       <div className="px-5 space-y-4">
+        {isError && (
+          <div className="flex items-center gap-2 text-[13px] text-muted-foreground glass-card p-3">
+            <WifiOff className="w-4 h-4" />
+            <span>Couldn't fetch live data — showing saved venues</span>
+          </div>
+        )}
+
         {/* Iftar banner */}
         <div className="glass-card p-3.5 flex items-center gap-3">
           <span className="text-2xl">🌙</span>
@@ -65,20 +82,26 @@ export default function HalalFood() {
         </div>
 
         {/* Venues */}
-        <motion.div
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-          className="space-y-2.5"
-        >
-          {filtered.map((venue) => (
-            <motion.div key={venue.id} variants={staggerItem}>
-              <VenueCard venue={venue} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
+          </div>
+        ) : (
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+            className="space-y-2.5"
+          >
+            {filtered.map((venue) => (
+              <motion.div key={venue.id} variants={staggerItem}>
+                <VenueCard venue={venue} />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
-        {filtered.length === 0 && (
+        {!isLoading && filtered.length === 0 && (
           <div className="text-center py-10">
             <p className="text-muted-foreground text-[15px]">No venues found</p>
             <p className="text-[13px] text-muted-foreground mt-1">Try widening your search</p>
