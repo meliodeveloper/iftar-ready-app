@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useSettings } from "@/lib/settingsStore";
 
 interface GeoPosition {
@@ -14,46 +14,52 @@ interface UseGeolocationResult {
   locationLabel: string;
 }
 
-const DEFAULT_POSITION: GeoPosition = { lat: 51.5177, lng: -0.0654 }; // London fallback
+const LONDON_FALLBACK: GeoPosition = { lat: 51.5177, lng: -0.0654 };
 
 export function useGeolocation(): UseGeolocationResult {
   const locationMode = useSettings((s) => s.locationMode);
   const manualLocation = useSettings((s) => s.manualLocation);
-  const manualLat = useSettings((s) => (s as any).manualLat as number | undefined);
-  const manualLng = useSettings((s) => (s as any).manualLng as number | undefined);
+  const manualLat = useSettings((s) => s.manualLat);
+  const manualLng = useSettings((s) => s.manualLng);
 
-  const [autoPosition, setAutoPosition] = useState<GeoPosition | null>(null);
+  const [detectedPosition, setDetectedPosition] = useState<GeoPosition | null>(null);
+  const [geoFailed, setGeoFailed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const attemptedRef = useRef(false);
 
   const fetchAuto = useCallback(() => {
     setLoading(true);
     setError(null);
+    setGeoFailed(false);
 
     if (!navigator.geolocation) {
       setError("Geolocation not supported");
-      setAutoPosition(DEFAULT_POSITION);
+      setGeoFailed(true);
       setLoading(false);
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setAutoPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setDetectedPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setGeoFailed(false);
         setLoading(false);
       },
       (err) => {
         console.warn("Geolocation error:", err.message);
         setError(err.message);
-        setAutoPosition(DEFAULT_POSITION);
+        setGeoFailed(true);
         setLoading(false);
       },
-      { timeout: 8000, enableHighAccuracy: false }
+      { timeout: 10000, enableHighAccuracy: false }
     );
   }, []);
 
+  // Always attempt geolocation on first mount in auto mode
   useEffect(() => {
     if (locationMode === "auto") {
+      attemptedRef.current = true;
       fetchAuto();
     } else {
       setLoading(false);
@@ -64,13 +70,20 @@ export function useGeolocation(): UseGeolocationResult {
   let position: GeoPosition | null;
   let locationLabel: string;
 
-  if (locationMode === "manual" && manualLat && manualLng) {
+  if (locationMode === "manual" && manualLat != null && manualLng != null) {
+    // User explicitly chose a manual location
     position = { lat: manualLat, lng: manualLng };
     locationLabel = manualLocation || `${manualLat.toFixed(2)}°, ${manualLng.toFixed(2)}°`;
-  } else if (autoPosition) {
-    position = autoPosition;
-    locationLabel = `${autoPosition.lat.toFixed(2)}°N, ${autoPosition.lng.toFixed(2)}°W`;
+  } else if (detectedPosition) {
+    // Geolocation succeeded — always use real coordinates
+    position = detectedPosition;
+    locationLabel = `${detectedPosition.lat.toFixed(2)}°N, ${detectedPosition.lng.toFixed(2)}°W`;
+  } else if (geoFailed) {
+    // Geolocation failed — only now use London fallback
+    position = LONDON_FALLBACK;
+    locationLabel = "London, UK (default)";
   } else {
+    // Still loading
     position = null;
     locationLabel = "Locating…";
   }
