@@ -2,6 +2,7 @@ import { MapPin, Navigation, ChevronDown, Star as StarIcon } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion";
 import type { Mosque } from "@/lib/mockData";
 import { pressable } from "@/lib/motion";
+import { openExternal } from "@/lib/openExternal";
 import { useSettings } from "@/lib/settingsStore";
 import { toast } from "sonner";
 
@@ -87,26 +88,22 @@ export default function MosqueCard({ mosque, expanded, onToggle, compact }: Mosq
 
               {/* Directions */}
               <div className="flex gap-3">
-                <motion.a
+                <motion.button
                   {...pressable}
-                  href={appleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  onClick={() => openExternal(appleMapsUrl)}
                   className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] font-semibold text-primary-foreground active:scale-[0.98] transition-transform"
                 >
                   <Navigation className="w-4 h-4" />
                   Apple Maps
-                </motion.a>
-                <motion.a
+                </motion.button>
+                <motion.button
                   {...pressable}
-                  href={googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  onClick={() => openExternal(googleMapsUrl)}
                   className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 text-[14px] font-semibold text-foreground active:scale-[0.98] transition-transform"
                 >
                   <MapPin className="w-4 h-4 text-primary" />
                   Google Maps
-                </motion.a>
+                </motion.button>
               </div>
             </div>
           </motion.div>

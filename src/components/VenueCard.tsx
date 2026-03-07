@@ -2,6 +2,7 @@ import { MapPin, Navigation, Phone, Star, BadgeCheck, Clock, ChevronDown } from 
 import { motion, AnimatePresence } from "framer-motion";
 import { pressable } from "@/lib/motion";
 import type { HalalVenue } from "@/lib/mockData";
+import { openExternal } from "@/lib/openExternal";
 
 interface VenueCardProps {
   venue: HalalVenue;
@@ -113,28 +114,22 @@ export default function VenueCard({ venue, expanded, onToggle }: VenueCardProps)
 
               {/* Direction buttons */}
               <div className="flex gap-3">
-                <motion.a
+                <motion.button
                   {...pressable}
-                  href={appleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => { e.stopPropagation(); openExternal(appleMapsUrl); }}
                   className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] font-semibold text-primary-foreground active:scale-[0.98] transition-transform"
                 >
                   <Navigation className="w-4 h-4" />
                   Apple Maps
-                </motion.a>
-                <motion.a
+                </motion.button>
+                <motion.button
                   {...pressable}
-                  href={googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => { e.stopPropagation(); openExternal(googleMapsUrl); }}
                   className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 text-[14px] font-semibold text-foreground active:scale-[0.98] transition-transform"
                 >
                   <MapPin className="w-4 h-4 text-primary" />
                   Google Maps
-                </motion.a>
+                </motion.button>
               </div>
             </div>
           </motion.div>
