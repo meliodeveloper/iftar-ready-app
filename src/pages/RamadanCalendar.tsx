@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
-import { mockRamadanCalendar } from "@/lib/mockData";
+import { mockRamadanCalendar, getRamadanDay } from "@/lib/mockData";
 import { Star } from "lucide-react";
 import { pageTransitionProps, staggerContainer, staggerItem } from "@/lib/motion";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
 
 export default function RamadanCalendar() {
-  const todayDay = 5;
+  const now = useCurrentTime(60_000);
+  const todayDay = getRamadanDay(now);
 
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
@@ -19,8 +21,8 @@ export default function RamadanCalendar() {
           className="glass-card overflow-hidden divide-y divide-border"
         >
           {mockRamadanCalendar.map((day) => {
-            const isToday = day.day === todayDay;
-            const isPast = day.day < todayDay;
+            const isToday = todayDay !== null && day.day === todayDay;
+            const isPast = todayDay !== null && day.day < todayDay;
             return (
               <motion.div
                 key={day.day}
