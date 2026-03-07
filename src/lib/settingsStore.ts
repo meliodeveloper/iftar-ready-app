@@ -20,6 +20,7 @@ export interface UserSettings {
   manualLat: number | null;
   manualLng: number | null;
   selectedMosqueId: string;
+  selectedMosqueName: string;
   notifEnabled: boolean;
   preIftarMinutes: number;
   dailySuhoorReminder: boolean;
@@ -44,7 +45,8 @@ const defaults: UserSettings = {
   manualLocation: "",
   manualLat: null,
   manualLng: null,
-  selectedMosqueId: "1",
+  selectedMosqueId: "",
+  selectedMosqueName: "",
   notifEnabled: true,
   preIftarMinutes: 60,
   dailySuhoorReminder: false,

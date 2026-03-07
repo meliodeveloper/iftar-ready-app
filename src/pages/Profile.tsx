@@ -105,7 +105,7 @@ export default function Profile() {
     }
   }, [settings.themePreference]);
 
-  const selectedMosque = mockMosques.find((m) => m.id === settings.selectedMosqueId);
+  const selectedMosqueName = settings.selectedMosqueName || mockMosques.find((m) => m.id === settings.selectedMosqueId)?.name;
 
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
@@ -196,7 +196,7 @@ export default function Profile() {
                 <div className="flex items-center gap-2 min-w-0">
                   <MapPin className="w-4 h-4 text-primary shrink-0" />
                   <span className="text-[15px] text-foreground truncate">
-                    {selectedMosque?.name ?? "None selected"}
+                    {selectedMosqueName ?? "None selected"}
                   </span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
