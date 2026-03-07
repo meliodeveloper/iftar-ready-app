@@ -10,8 +10,13 @@ interface VenueCardProps {
 }
 
 export default function VenueCard({ venue, expanded, onToggle }: VenueCardProps) {
-  const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(venue.name)}&address=${encodeURIComponent(venue.address)}`;
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.name + " " + venue.address)}`;
+  const hasCoords = venue.lat != null && venue.lng != null;
+  const appleMapsUrl = hasCoords
+    ? `https://maps.apple.com/?daddr=${venue.lat},${venue.lng}&q=${encodeURIComponent(venue.name)}`
+    : `https://maps.apple.com/?q=${encodeURIComponent(venue.name + " " + venue.address)}`;
+  const googleMapsUrl = hasCoords
+    ? `https://www.google.com/maps/dir/?api=1&destination=${venue.lat},${venue.lng}`
+    : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(venue.name + " " + venue.address)}`;
 
   return (
     <div className={`glass-card p-4 transition-all ${!venue.isOpen ? "opacity-70" : ""} ${expanded ? "ring-1 ring-primary dark:gold-glow" : ""}`}>

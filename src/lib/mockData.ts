@@ -23,6 +23,8 @@ export interface HalalVenue {
   name: string;
   address: string;
   distance: string;
+  lat?: number;
+  lng?: number;
   rating: number;
   cuisine: string;
   priceLevel: string;
