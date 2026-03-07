@@ -81,16 +81,32 @@ export const mockRamadanCalendar: RamadanDay[] = Array.from({ length: 30 }, (_, 
   };
 });
 
-export function getCountdownTarget(): { label: string; targetTime: Date; sublabel: string } {
-  const now = new Date();
+/** Ramadan 2026 start date */
+const RAMADAN_START = new Date(2026, 1, 18); // Feb 18 2026
+
+/**
+ * Compute which Ramadan day "today" is (1-30), or null if outside Ramadan.
+ */
+export function getRamadanDay(now: Date): number | null {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  
+  const diffMs = today.getTime() - RAMADAN_START.getTime();
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays < 0 || diffDays >= 30) return null;
+  return diffDays + 1;
+}
+
+/**
+ * Returns the current countdown target based on the supplied `now`.
+ */
+export function getCountdownTarget(now: Date): { label: string; targetTime: Date; sublabel: string } {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
   const [fajrH, fajrM] = mockPrayerTimes.fajr.split(":").map(Number);
   const [maghribH, maghribM] = mockPrayerTimes.maghrib.split(":").map(Number);
-  
+
   const fajrToday = new Date(today); fajrToday.setHours(fajrH, fajrM, 0);
   const maghribToday = new Date(today); maghribToday.setHours(maghribH, maghribM, 0);
-  
+
   if (now < fajrToday) {
     return { label: "Suhoor ends", sublabel: "Fast begins at Fajr", targetTime: fajrToday };
   } else if (now < maghribToday) {

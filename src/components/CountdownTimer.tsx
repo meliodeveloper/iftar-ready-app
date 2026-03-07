@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getCountdownTarget } from "@/lib/mockData";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
 
 function AnimatedDigit({ value }: { value: string }) {
   return (
@@ -20,27 +21,14 @@ function AnimatedDigit({ value }: { value: string }) {
 }
 
 export default function CountdownTimer() {
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  const [target, setTarget] = useState(getCountdownTarget());
+  const now = useCurrentTime(1000);
 
-  useEffect(() => {
-    const tick = () => {
-      const t = getCountdownTarget();
-      setTarget(t);
-      const diff = t.targetTime.getTime() - Date.now();
-      if (diff <= 0) {
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-      const hours = Math.floor(diff / 3600000);
-      const minutes = Math.floor((diff % 3600000) / 60000);
-      const seconds = Math.floor((diff % 60000) / 1000);
-      setTimeLeft({ hours, minutes, seconds });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
+  const target = useMemo(() => getCountdownTarget(now), [now]);
+
+  const diff = Math.max(0, target.targetTime.getTime() - now.getTime());
+  const hours = Math.floor(diff / 3600000);
+  const minutes = Math.floor((diff % 3600000) / 60000);
+  const seconds = Math.floor((diff % 60000) / 1000);
 
   const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -54,9 +42,9 @@ export default function CountdownTimer() {
       </h2>
       <div className="flex items-center gap-3 mt-1">
         {[
-          { value: pad(timeLeft.hours), label: "HR" },
-          { value: pad(timeLeft.minutes), label: "MIN" },
-          { value: pad(timeLeft.seconds), label: "SEC" },
+          { value: pad(hours), label: "HR" },
+          { value: pad(minutes), label: "MIN" },
+          { value: pad(seconds), label: "SEC" },
         ].map((unit, i) => (
           <div key={i} className="flex flex-col items-center gap-1">
             <div className="w-[60px] h-[60px] rounded-2xl bg-secondary flex items-center justify-center">
