@@ -17,8 +17,8 @@ export default function MosqueCard({ mosque, expanded, onToggle, compact }: Mosq
   const update = useSettings((s) => s.update);
   const isDefault = selectedMosqueId === mosque.id;
 
-  const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(mosque.name)}&ll=${mosque.lat},${mosque.lng}`;
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${mosque.lat},${mosque.lng}&query_place_id=${encodeURIComponent(mosque.name)}`;
+  const appleMapsUrl = `https://maps.apple.com/?daddr=${mosque.lat},${mosque.lng}&q=${encodeURIComponent(mosque.name)}`;
+  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${mosque.lat},${mosque.lng}&destination_place_id=${encodeURIComponent(mosque.name)}`;
 
   const setAsDefault = () => {
     update({ selectedMosqueId: mosque.id, selectedMosqueName: mosque.name });
