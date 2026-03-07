@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import CountdownTimer from "@/components/CountdownTimer";
 import MosqueCard from "@/components/MosqueCard";
 import AvatarButton from "@/components/AvatarButton";
+import LocationDialog from "@/components/LocationDialog";
 import { mockMosques, mockPrayerTimes } from "@/lib/mockData";
 import { pageTransitionProps, staggerContainer, staggerItem, pressable } from "@/lib/motion";
 import heroImage from "@/assets/ramadan-hero.jpg";
@@ -14,8 +15,9 @@ import { useNearbyMosques } from "@/hooks/useNearbyPlaces";
 export default function Index() {
   const navigate = useNavigate();
   const [mosqueExpanded, setMosqueExpanded] = useState(false);
+  const [locationOpen, setLocationOpen] = useState(false);
 
-  const { position } = useGeolocation();
+  const { position, locationLabel } = useGeolocation();
   const { data: liveMosques } = useNearbyMosques(
     position?.lat ?? null,
     position?.lng ?? null
@@ -48,10 +50,15 @@ export default function Index() {
         {/* Location */}
         <motion.div variants={staggerItem} className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-primary" />
-          <span className="text-[15px] text-foreground">
-            {position ? `${position.lat.toFixed(2)}°N, ${position.lng.toFixed(2)}°W` : "London, UK"}
+          <span className="text-[15px] text-foreground truncate">
+            {locationLabel}
           </span>
-          <button className="text-[13px] text-primary font-semibold ml-auto">Change</button>
+          <button
+            onClick={() => setLocationOpen(true)}
+            className="text-[13px] text-primary font-semibold ml-auto shrink-0"
+          >
+            Change
+          </button>
         </motion.div>
 
         {/* Countdown */}
@@ -103,6 +110,9 @@ export default function Index() {
           />
         </motion.div>
       </motion.div>
+
+      {/* Location picker */}
+      <LocationDialog open={locationOpen} onClose={() => setLocationOpen(false)} />
     </motion.div>
   );
 }
