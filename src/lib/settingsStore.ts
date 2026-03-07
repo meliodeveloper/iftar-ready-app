@@ -17,6 +17,8 @@ export interface UserSettings {
   displayName: string;
   locationMode: LocationMode;
   manualLocation: string;
+  manualLat: number | null;
+  manualLng: number | null;
   selectedMosqueId: string;
   notifEnabled: boolean;
   preIftarMinutes: number;
@@ -40,6 +42,8 @@ const defaults: UserSettings = {
   displayName: "",
   locationMode: "auto",
   manualLocation: "",
+  manualLat: null,
+  manualLng: null,
   selectedMosqueId: "1",
   notifEnabled: true,
   preIftarMinutes: 60,
