@@ -13,6 +13,7 @@ const cuisines = ["All", "Pakistani", "Indian", "Lebanese", "Middle Eastern"];
 export default function HalalFood() {
   const [search, setSearch] = useState("");
   const [cuisine, setCuisine] = useState("All");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const { position } = useGeolocation();
   const { data: liveVenues, isLoading, isError } = useNearbyHalalVenues(
@@ -53,13 +54,13 @@ export default function HalalFood() {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
           <input
             type="text"
             placeholder="Search restaurants..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="ios-input pl-10"
+            className="ios-input !pl-10"
           />
         </div>
 
@@ -95,7 +96,11 @@ export default function HalalFood() {
           >
             {filtered.map((venue) => (
               <motion.div key={venue.id} variants={staggerItem}>
-                <VenueCard venue={venue} />
+                <VenueCard
+                  venue={venue}
+                  expanded={expandedId === venue.id}
+                  onToggle={() => setExpandedId(expandedId === venue.id ? null : venue.id)}
+                />
               </motion.div>
             ))}
           </motion.div>
