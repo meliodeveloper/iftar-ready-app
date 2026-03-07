@@ -29,6 +29,7 @@ export interface HalalVenue {
   isOpen: boolean;
   verified: boolean;
   phone?: string;
+  openingHours?: string[];
 }
 
 export interface RamadanDay {

@@ -131,6 +131,7 @@ serve(async (req) => {
         priceLevel: mapPriceLevel(place.priceLevel),
         isOpen: place.currentOpeningHours?.openNow ?? false,
         verified: false, // Google doesn't verify halal
+        openingHours: place.currentOpeningHours?.weekdayDescriptions ?? [],
       };
     });
 

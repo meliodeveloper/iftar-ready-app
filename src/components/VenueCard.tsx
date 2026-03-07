@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { MapPin, Navigation, Phone, Star, BadgeCheck, Clock, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { pressable } from "@/lib/motion";
@@ -15,7 +14,7 @@ export default function VenueCard({ venue, expanded, onToggle }: VenueCardProps)
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.name + " " + venue.address)}`;
 
   return (
-    <div className={`glass-card p-4 transition-all ${expanded ? "ring-1 ring-primary dark:gold-glow" : ""}`}>
+    <div className={`glass-card p-4 transition-all ${!venue.isOpen ? "opacity-70" : ""} ${expanded ? "ring-1 ring-primary dark:gold-glow" : ""}`}>
       <button
         onClick={onToggle}
         className="w-full text-left active:scale-[0.99] transition-transform"
@@ -31,6 +30,11 @@ export default function VenueCard({ venue, expanded, onToggle }: VenueCardProps)
               ) : (
                 <span className="text-[10px] font-semibold text-warning bg-warning/10 px-1.5 py-0.5 rounded-full shrink-0">
                   Suggested
+                </span>
+              )}
+              {!venue.isOpen && (
+                <span className="text-[10px] font-semibold text-destructive bg-destructive/10 px-1.5 py-0.5 rounded-full shrink-0">
+                  Closed
                 </span>
               )}
             </div>
@@ -80,29 +84,53 @@ export default function VenueCard({ venue, expanded, onToggle }: VenueCardProps)
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
             className="overflow-hidden"
           >
-            <div className="pt-3 mt-3 border-t border-border flex gap-3">
-              <motion.a
-                {...pressable}
-                href={appleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] font-semibold text-primary-foreground active:scale-[0.98] transition-transform"
-              >
-                <Navigation className="w-4 h-4" />
-                Apple Maps
-              </motion.a>
-              <motion.a
-                {...pressable}
-                href={googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 text-[14px] font-semibold text-foreground active:scale-[0.98] transition-transform"
-              >
-                <MapPin className="w-4 h-4 text-primary" />
-                Google Maps
-              </motion.a>
+            <div className="pt-3 mt-3 border-t border-border space-y-3">
+              {/* Opening hours */}
+              {venue.openingHours && venue.openingHours.length > 0 && (
+                <div className="space-y-1">
+                  <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider">Opening Hours</p>
+                  <div className="bg-secondary rounded-xl p-3 space-y-1">
+                    {venue.openingHours.map((line, i) => {
+                      const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
+                      const isToday = line.toLowerCase().startsWith(todayName.toLowerCase());
+                      return (
+                        <p
+                          key={i}
+                          className={`text-[12px] ${isToday ? "text-primary font-semibold" : "text-muted-foreground"}`}
+                        >
+                          {line}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Direction buttons */}
+              <div className="flex gap-3">
+                <motion.a
+                  {...pressable}
+                  href={appleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-[14px] font-semibold text-primary-foreground active:scale-[0.98] transition-transform"
+                >
+                  <Navigation className="w-4 h-4" />
+                  Apple Maps
+                </motion.a>
+                <motion.a
+                  {...pressable}
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 text-[14px] font-semibold text-foreground active:scale-[0.98] transition-transform"
+                >
+                  <MapPin className="w-4 h-4 text-primary" />
+                  Google Maps
+                </motion.a>
+              </div>
             </div>
           </motion.div>
         )}

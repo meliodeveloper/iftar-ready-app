@@ -38,13 +38,13 @@ export default function Mosques() {
         )}
 
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
           <input
             type="text"
             placeholder="Search mosques..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="ios-input pl-10"
+            className="ios-input !pl-10"
           />
         </div>
 
