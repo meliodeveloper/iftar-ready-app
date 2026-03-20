@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://yourdomain.com",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
@@ -20,17 +20,14 @@ serve(async (req) => {
     const { lat, lng, type, radius = 5000 } = await req.json();
 
     if (!lat || !lng || !type) {
-      return new Response(
-        JSON.stringify({ error: "lat, lng, and type are required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "lat, lng, and type are required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Use Places API (New) - Nearby Search
-    const includedTypes =
-      type === "mosque"
-        ? ["mosque"]
-        : ["restaurant"]; // halal venues
+    const includedTypes = type === "mosque" ? ["mosque"] : ["restaurant"]; // halal venues
 
     const textQuery = type === "mosque" ? undefined : "halal restaurant";
 
@@ -38,28 +35,25 @@ serve(async (req) => {
 
     if (type === "mosque") {
       // Nearby Search for mosques
-      const response = await fetch(
-        "https://places.googleapis.com/v1/places:searchNearby",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Goog-Api-Key": apiKey,
-            "X-Goog-FieldMask":
-              "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.currentOpeningHours,places.nationalPhoneNumber,places.googleMapsUri",
-          },
-          body: JSON.stringify({
-            includedTypes,
-            locationRestriction: {
-              circle: {
-                center: { latitude: lat, longitude: lng },
-                radius,
-              },
+      const response = await fetch("https://places.googleapis.com/v1/places:searchNearby", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-FieldMask":
+            "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.currentOpeningHours,places.nationalPhoneNumber,places.googleMapsUri",
+        },
+        body: JSON.stringify({
+          includedTypes,
+          locationRestriction: {
+            circle: {
+              center: { latitude: lat, longitude: lng },
+              radius,
             },
-            maxResultCount: 20,
-          }),
-        }
-      );
+          },
+          maxResultCount: 20,
+        }),
+      });
 
       if (!response.ok) {
         const errBody = await response.text();
@@ -70,28 +64,25 @@ serve(async (req) => {
       places = data.places || [];
     } else {
       // Text Search for halal restaurants
-      const response = await fetch(
-        "https://places.googleapis.com/v1/places:searchText",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Goog-Api-Key": apiKey,
-            "X-Goog-FieldMask":
-              "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.currentOpeningHours,places.nationalPhoneNumber,places.googleMapsUri,places.priceLevel,places.primaryType,places.primaryTypeDisplayName",
-          },
-          body: JSON.stringify({
-            textQuery: "halal restaurant",
-            locationBias: {
-              circle: {
-                center: { latitude: lat, longitude: lng },
-                radius,
-              },
+      const response = await fetch("https://places.googleapis.com/v1/places:searchText", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-FieldMask":
+            "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.currentOpeningHours,places.nationalPhoneNumber,places.googleMapsUri,places.priceLevel,places.primaryType,places.primaryTypeDisplayName",
+        },
+        body: JSON.stringify({
+          textQuery: "halal restaurant",
+          locationBias: {
+            circle: {
+              center: { latitude: lat, longitude: lng },
+              radius,
             },
-            maxResultCount: 20,
-          }),
-        }
-      );
+          },
+          maxResultCount: 20,
+        }),
+      });
 
       if (!response.ok) {
         const errBody = await response.text();
@@ -159,9 +150,7 @@ function haversine(lat1: number, lon1: number, lat2: number, lon2: number): numb
   const R = 3958.8; // miles
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
@@ -175,11 +164,17 @@ function formatDistance(miles: number): string {
 
 function mapPriceLevel(level?: string): string {
   switch (level) {
-    case "PRICE_LEVEL_FREE": return "Free";
-    case "PRICE_LEVEL_INEXPENSIVE": return "£";
-    case "PRICE_LEVEL_MODERATE": return "££";
-    case "PRICE_LEVEL_EXPENSIVE": return "£££";
-    case "PRICE_LEVEL_VERY_EXPENSIVE": return "££££";
-    default: return "££";
+    case "PRICE_LEVEL_FREE":
+      return "Free";
+    case "PRICE_LEVEL_INEXPENSIVE":
+      return "£";
+    case "PRICE_LEVEL_MODERATE":
+      return "££";
+    case "PRICE_LEVEL_EXPENSIVE":
+      return "£££";
+    case "PRICE_LEVEL_VERY_EXPENSIVE":
+      return "££££";
+    default:
+      return "££";
   }
 }
