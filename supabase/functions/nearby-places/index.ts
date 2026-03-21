@@ -1,16 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const ALLOWED_ORIGINS = new Set([
-  "http://localhost:5173",
-  "http://localhost:8080",
-  "https://iftar-ready-app.lovable.app",
-  ...(Deno.env.get("VITE_APP_URL") ? [Deno.env.get("VITE_APP_URL")!] : []),
-]);
-
-function corsHeaders(origin: string | null) {
-  const allowedOrigin = origin && ALLOWED_ORIGINS.has(origin) ? origin : "https://iftar-ready-app.lovable.app";
+// TODO: Tighten CORS back to specific origins after App Store v1.0 review approval.
+function corsHeaders(_origin: string | null) {
   return {
-    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers":
       "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
