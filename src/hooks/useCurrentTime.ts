@@ -11,19 +11,34 @@ export function useCurrentTime(intervalMs = 1000): Date {
   const sync = useCallback(() => setNow(new Date()), []);
 
   useEffect(() => {
-    // Tick on the requested cadence
-    sync();
-    intervalRef.current = setInterval(sync, intervalMs);
-
-    // Re-sync when the user returns to the tab / app
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") sync();
+    const start = () => {
+      sync();
+      intervalRef.current = setInterval(sync, intervalMs);
     };
+
+    const stop = () => {
+      clearInterval(intervalRef.current);
+    };
+
+    // Pause interval when hidden, resume and re-sync when visible again
+    const onVisibility = () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    };
+
+    // Start immediately unless the tab is already hidden
+    if (!document.hidden) {
+      start();
+    }
+
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("focus", sync);
 
     return () => {
-      clearInterval(intervalRef.current);
+      stop();
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("focus", sync);
     };

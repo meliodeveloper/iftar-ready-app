@@ -181,7 +181,7 @@
   }
   .geometric-pattern::before {
     content: '';
-    position: fixed;
+    position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 0;
@@ -194,7 +194,7 @@
   /* Soft radial ambient light */
   .geometric-pattern::after {
     content: '';
-    position: fixed;
+    position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 0;

@@ -3,7 +3,12 @@ import { motion } from "framer-motion";
 import PageHeader from "@/components/PageHeader";
 import { mockRamadanCalendar, getRamadanDay } from "@/lib/mockData";
 import { Star, Loader2, MapPin } from "lucide-react";
-import { pageTransitionProps, staggerContainer, staggerItem } from "@/lib/motion";
+import { pageTransitionProps, staggerItem } from "@/lib/motion";
+
+// Faster stagger than the shared preset (0.02s × 30 = 0.6s total)
+const calendarStagger = {
+  animate: { transition: { staggerChildren: 0.02 } },
+};
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useRamadanCalendar } from "@/hooks/useRamadanCalendar";
@@ -20,6 +25,9 @@ export default function RamadanCalendar() {
     position?.lat ?? null,
     position?.lng ?? null
   );
+
+  // If data was already in React Query cache on mount, skip the entrance animation
+  const skipAnimation = useRef(liveCalendar !== undefined);
 
   const calendar = liveCalendar && liveCalendar.length > 0 ? liveCalendar : mockRamadanCalendar;
 
@@ -51,8 +59,8 @@ export default function RamadanCalendar() {
           </div>
         ) : (
           <motion.div
-            variants={staggerContainer}
-            initial="initial"
+            variants={calendarStagger}
+            initial={skipAnimation.current ? false : "initial"}
             animate="animate"
             className="glass-card overflow-hidden divide-y divide-border"
           >
