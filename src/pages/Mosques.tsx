@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import PageHeader from "@/components/PageHeader";
+import StickyHeader from "@/components/StickyHeader";
 import MosqueCard from "@/components/MosqueCard";
 import { mockMosques, type Mosque } from "@/lib/mockData";
 import { Search, Loader2, WifiOff, Star } from "lucide-react";
@@ -38,8 +38,8 @@ export default function Mosques() {
   );
 
   return (
-    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
-      <PageHeader title="Mosques" subtitle="Find mosques near you" />
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern" style={{}}>
+      <StickyHeader title="Mosques" />
 
       <div className="px-5 space-y-4">
         {isError && (
@@ -49,14 +49,14 @@ export default function Mosques() {
           </div>
         )}
 
-        <div className="relative">
+        <div className="relative liquid-glass rounded-xl">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
           <input
             type="text"
             placeholder="Search mosques..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="ios-input !pl-10"
+            className="ios-input !pl-10 !bg-transparent !border-transparent"
           />
         </div>
 

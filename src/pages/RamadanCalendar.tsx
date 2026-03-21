@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import PageHeader from "@/components/PageHeader";
+import StickyHeader from "@/components/StickyHeader";
 import { mockRamadanCalendar, getRamadanDay } from "@/lib/mockData";
 import { Star, Loader2, MapPin } from "lucide-react";
 import { pageTransitionProps, staggerItem } from "@/lib/motion";
@@ -39,8 +39,8 @@ export default function RamadanCalendar() {
   }, [todayDay, isLoading]);
 
   return (
-    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
-      <PageHeader title="Ramadan Calendar" subtitle="30 days of blessings" />
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern" style={{}}>
+      <StickyHeader title="Calendar" />
 
       <div className="px-5 space-y-3">
         {/* Location info */}

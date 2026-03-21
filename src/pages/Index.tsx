@@ -41,7 +41,7 @@ export default function Index() {
       <div className="relative h-48 overflow-hidden">
         <img src={heroImage} alt="Ramadan night" className="absolute inset-0 w-full h-full object-cover opacity-20 dark:opacity-30" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background" />
-        <div className="absolute top-12 right-5 z-20">
+        <div className="absolute top-14 left-5 z-20">
           <AvatarButton />
         </div>
         <div className="relative z-10 flex flex-col items-center justify-end h-full pb-5 px-5">
@@ -72,7 +72,7 @@ export default function Index() {
         </motion.div>
 
         {/* Countdown */}
-        <motion.div variants={staggerItem} className="glass-card p-5">
+        <motion.div variants={staggerItem} className="glass-card liquid-glass p-5">
           <CountdownTimer fajr={prayerTimes.fajr} maghrib={prayerTimes.maghrib} />
         </motion.div>
 
@@ -81,7 +81,7 @@ export default function Index() {
           variants={staggerItem}
           {...pressable}
           onClick={() => navigate("/prayer-times")}
-          className="glass-card p-4 cursor-pointer"
+          className="glass-card liquid-glass p-4 cursor-pointer"
         >
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-[15px] font-semibold text-foreground">Today's Fasting Times</h3>

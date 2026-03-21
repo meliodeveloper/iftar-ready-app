@@ -40,7 +40,25 @@ function AnimatedRoutes() {
 
 function AppShell() {
   const onboardingComplete = useSettings((s) => s.onboardingComplete);
+  const themePreference = useSettings((s) => s.themePreference);
   useSwipeBack();
+
+  // Keep the dark class in sync with the theme preference, including live
+  // system changes when set to "auto"
+  useEffect(() => {
+    const root = document.documentElement;
+    if (themePreference === "dark") {
+      root.classList.add("dark");
+    } else if (themePreference === "light") {
+      root.classList.remove("dark");
+    } else {
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      const handler = (e: MediaQueryListEvent) => root.classList.toggle("dark", e.matches);
+      root.classList.toggle("dark", mq.matches);
+      mq.addEventListener("change", handler);
+      return () => mq.removeEventListener("change", handler);
+    }
+  }, [themePreference]);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;

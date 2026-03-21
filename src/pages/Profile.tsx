@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, ChevronRight, Trash2, ExternalLink, Info, MapPinOff } from "lucide-react";
+import { MapPin, ChevronRight, Trash2, ExternalLink, Info, MapPinOff } from "lucide-react";
+import StickyHeader from "@/components/StickyHeader";
 import { openExternal } from "@/lib/openExternal";
 import pkg from "../../package.json";
 import { useQueryClient } from "@tanstack/react-query";
@@ -112,18 +113,8 @@ export default function Profile() {
   const selectedMosqueName = settings.selectedMosqueName || mockMosques.find((m) => m.id === settings.selectedMosqueId)?.name;
 
   return (
-    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
-      {/* Header */}
-      <div className="pt-14 pb-3 px-5 flex items-center gap-3">
-        <motion.button
-          {...pressable}
-          onClick={() => navigate(-1)}
-          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center"
-        >
-          <ArrowLeft className="w-5 h-5 text-foreground" />
-        </motion.button>
-        <h1 className="text-2xl font-display font-bold text-gradient-gold">Profile</h1>
-      </div>
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern" style={{}}>
+      <StickyHeader title="Profile" rightElement={null} />
 
       <motion.div
         variants={staggerContainer}

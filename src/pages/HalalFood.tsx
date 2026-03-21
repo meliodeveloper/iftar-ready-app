@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import PageHeader from "@/components/PageHeader";
+import StickyHeader from "@/components/StickyHeader";
 import VenueCard from "@/components/VenueCard";
 import { mockHalalVenues } from "@/lib/mockData";
 import { Search, Info, Loader2, WifiOff } from "lucide-react";
@@ -55,8 +55,8 @@ export default function HalalFood() {
   }, [venues, search, cuisine, openNowOnly, verifiedOnly]);
 
   return (
-    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
-      <PageHeader title="Halal Food" subtitle="Discover halal spots near you" />
+    <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern" style={{}}>
+      <StickyHeader title="Halal Food" />
 
       <div className="px-5 space-y-4">
         {isError && (
@@ -76,14 +76,14 @@ export default function HalalFood() {
         </div>
 
         {/* Search */}
-        <div className="relative">
+        <div className="relative liquid-glass rounded-xl">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
           <input
             type="text"
             placeholder="Search restaurants..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="ios-input !pl-10"
+            className="ios-input !pl-10 !bg-transparent !border-transparent"
           />
         </div>
 
