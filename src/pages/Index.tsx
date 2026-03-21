@@ -11,6 +11,7 @@ import { pageTransitionProps, staggerContainer, staggerItem, pressable } from "@
 import heroImage from "@/assets/ramadan-hero.jpg";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useNearbyMosques } from "@/hooks/useNearbyPlaces";
+import { useTodayPrayerTimes } from "@/hooks/useTodayPrayerTimes";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -22,8 +23,13 @@ export default function Index() {
     position?.lat ?? null,
     position?.lng ?? null
   );
+  const { data: livePrayerTimes } = useTodayPrayerTimes(
+    position?.lat ?? null,
+    position?.lng ?? null
+  );
 
   const nearest = liveMosques && liveMosques.length > 0 ? liveMosques[0] : mockMosques[0];
+  const prayerTimes = livePrayerTimes ?? mockPrayerTimes;
 
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
@@ -63,7 +69,7 @@ export default function Index() {
 
         {/* Countdown */}
         <motion.div variants={staggerItem} className="glass-card p-5">
-          <CountdownTimer />
+          <CountdownTimer fajr={prayerTimes.fajr} maghrib={prayerTimes.maghrib} />
         </motion.div>
 
         {/* Today's Fasting Times */}
@@ -83,12 +89,12 @@ export default function Index() {
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Fast Begins</p>
-              <p className="text-xl font-bold text-foreground mt-1">{mockPrayerTimes.fajr}</p>
+              <p className="text-xl font-bold text-foreground mt-1">{prayerTimes.fajr}</p>
               <p className="text-[11px] text-primary font-medium mt-0.5">Fajr</p>
             </div>
             <div className="bg-secondary rounded-xl p-3 text-center">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Fast Ends</p>
-              <p className="text-xl font-bold text-foreground mt-1">{mockPrayerTimes.maghrib}</p>
+              <p className="text-xl font-bold text-foreground mt-1">{prayerTimes.maghrib}</p>
               <p className="text-[11px] text-primary font-medium mt-0.5">Maghrib / Iftar</p>
             </div>
           </div>

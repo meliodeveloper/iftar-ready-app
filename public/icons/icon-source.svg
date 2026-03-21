@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="#0a0f1e"/>
+
+  <!-- Subtle rings -->
+  <circle cx="512" cy="469" r="272" fill="none" stroke="#f0aa14" stroke-width="16" opacity="0.15"/>
+  <circle cx="512" cy="469" r="221" fill="none" stroke="#f0aa14" stroke-width="16" opacity="0.12"/>
+
+  <!-- Crescent moon: large gold circle minus cutout -->
+  <circle cx="512" cy="469" r="256" fill="#f0aa14"/>
+  <circle cx="648" cy="384" r="205" fill="#0a0f1e"/>
+
+  <!-- Stars -->
+  <circle cx="256" cy="298" r="12" fill="#f0aa14" opacity="0.5"/>
+  <circle cx="768" cy="237" r="8"  fill="#f0aa14" opacity="0.6"/>
+  <circle cx="819" cy="640" r="12" fill="#f0aa14" opacity="0.4"/>
+  <circle cx="170" cy="597" r="8"  fill="#f0aa14" opacity="0.5"/>
+  <circle cx="512" cy="179" r="6"  fill="#f0aa14" opacity="0.4"/>
+</svg>

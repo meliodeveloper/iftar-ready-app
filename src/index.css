@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+/* Google Fonts loaded via <link> in index.html — no @import here */
 
 @layer base {
   :root {
@@ -113,11 +113,25 @@
     @apply border-border;
   }
 
+  html {
+    /* Prevent pull-to-refresh and over-scroll bounce on iOS PWA */
+    overscroll-behavior: none;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Prevent pull-to-refresh and over-scroll bounce */
+    overscroll-behavior: none;
+    /* Momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove 300ms tap delay on all interactive elements */
+  button, a, [role="button"], input, select, textarea {
+    touch-action: manipulation;
   }
 
   .font-display {
@@ -211,7 +225,8 @@
   }
 
   .ios-input {
-    @apply w-full rounded-xl px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground transition-all;
+    /* font-size must be >= 16px to prevent iOS Safari zooming on focus */
+    @apply w-full rounded-xl px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground transition-all;
     @apply bg-secondary border border-transparent;
     @apply focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30;
   }
@@ -226,6 +241,13 @@
 
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Momentum scrolling for any explicitly scrollable container */
+  .overflow-y-auto,
+  .overflow-auto,
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
   }
 
   /* ──── Reduced motion ──── */

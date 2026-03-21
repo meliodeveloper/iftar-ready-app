@@ -53,8 +53,27 @@ export default function Onboarding() {
     go("done");
   }, [go, update]);
 
-  const selectCity = useCallback((city: string) => {
-    update({ locationMode: "manual", manualLocation: city });
+  const selectCity = useCallback(async (city: string) => {
+    // Geocode the city name via Nominatim the same way LocationDialog does
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&addressdetails=1`
+      );
+      const data: Array<{ display_name: string; lat: string; lon: string }> = await res.json();
+      if (data.length > 0) {
+        const r = data[0];
+        update({
+          locationMode: "manual",
+          manualLocation: r.display_name.split(",").slice(0, 2).join(",").trim(),
+          manualLat: parseFloat(r.lat),
+          manualLng: parseFloat(r.lon),
+        });
+      } else {
+        update({ locationMode: "manual", manualLocation: city });
+      }
+    } catch {
+      update({ locationMode: "manual", manualLocation: city });
+    }
     go("notifications");
   }, [go, update]);
 

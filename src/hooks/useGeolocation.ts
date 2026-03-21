@@ -77,7 +77,9 @@ export function useGeolocation(): UseGeolocationResult {
   } else if (detectedPosition) {
     // Geolocation succeeded — always use real coordinates
     position = detectedPosition;
-    locationLabel = `${detectedPosition.lat.toFixed(2)}°N, ${detectedPosition.lng.toFixed(2)}°W`;
+    const latDir = detectedPosition.lat >= 0 ? "N" : "S";
+    const lngDir = detectedPosition.lng >= 0 ? "E" : "W";
+    locationLabel = `${Math.abs(detectedPosition.lat).toFixed(2)}°${latDir}, ${Math.abs(detectedPosition.lng).toFixed(2)}°${lngDir}`;
   } else if (geoFailed) {
     // Geolocation failed — only now use London fallback
     position = LONDON_FALLBACK;

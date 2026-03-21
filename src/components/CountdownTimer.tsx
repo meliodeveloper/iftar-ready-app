@@ -1,7 +1,12 @@
 import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getCountdownTarget } from "@/lib/mockData";
+import { mockPrayerTimes } from "@/lib/mockData";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
+
+interface CountdownTimerProps {
+  fajr?: string;
+  maghrib?: string;
+}
 
 function AnimatedDigit({ value }: { value: string }) {
   return (
@@ -20,10 +25,38 @@ function AnimatedDigit({ value }: { value: string }) {
   );
 }
 
-export default function CountdownTimer() {
+function computeTarget(now: Date, fajr: string, maghrib: string) {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const [fajrH, fajrM] = fajr.split(":").map(Number);
+  const [maghribH, maghribM] = maghrib.split(":").map(Number);
+
+  const fajrToday = new Date(today);
+  fajrToday.setHours(fajrH, fajrM, 0);
+  const maghribToday = new Date(today);
+  maghribToday.setHours(maghribH, maghribM, 0);
+
+  if (now < fajrToday) {
+    return { label: "Suhoor ends", sublabel: "Fast begins at Fajr", targetTime: fajrToday };
+  } else if (now < maghribToday) {
+    return { label: "Iftar", sublabel: "Fast ends at Maghrib", targetTime: maghribToday };
+  } else {
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(fajrH, fajrM, 0);
+    return { label: "Suhoor ends", sublabel: "Tomorrow's Fajr", targetTime: tomorrow };
+  }
+}
+
+export default function CountdownTimer({ fajr, maghrib }: CountdownTimerProps) {
   const now = useCurrentTime(1000);
 
-  const target = useMemo(() => getCountdownTarget(now), [now]);
+  const effectiveFajr = fajr ?? mockPrayerTimes.fajr;
+  const effectiveMaghrib = maghrib ?? mockPrayerTimes.maghrib;
+
+  const target = useMemo(
+    () => computeTarget(now, effectiveFajr, effectiveMaghrib),
+    [now, effectiveFajr, effectiveMaghrib]
+  );
 
   const diff = Math.max(0, target.targetTime.getTime() - now.getTime());
   const hours = Math.floor(diff / 3600000);

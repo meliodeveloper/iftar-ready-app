@@ -328,15 +328,25 @@ export default function Profile() {
             </Field>
 
             <div className="divide-y divide-border rounded-xl bg-secondary overflow-hidden -mx-0.5">
-              {["About", "Privacy Policy", "Terms of Service"].map((item) => (
-                <motion.button
+              <motion.button
+                {...pressable}
+                onClick={() => alert("Ramadan Companion\n\nA Ramadan prayer times, mosque finder, and halal food app.\n\nBuilt with React + Supabase.")}
+                className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
+              >
+                About
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </motion.button>
+              {/* TODO: replace # with real Privacy Policy and Terms of Service URLs */}
+              {["Privacy Policy", "Terms of Service"].map((item) => (
+                <motion.a
                   key={item}
+                  href="#"
                   {...pressable}
                   className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
                 >
                   {item}
                   <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                </motion.button>
+                </motion.a>
               ))}
             </div>
 

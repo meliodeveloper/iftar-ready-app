@@ -7,17 +7,22 @@ import { Search, Info, Loader2, WifiOff } from "lucide-react";
 import { pageTransitionProps, staggerContainer, staggerItem, pressable } from "@/lib/motion";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useNearbyHalalVenues } from "@/hooks/useNearbyPlaces";
+import { useSettings } from "@/lib/settingsStore";
 
 export default function HalalFood() {
   const [search, setSearch] = useState("");
   const [cuisine, setCuisine] = useState("All");
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [openNowOnly, setOpenNowOnly] = useState(false);
+
+  const openNowOnly = useSettings((s) => s.openNowOnly);
+  const verifiedOnly = useSettings((s) => s.verifiedOnly);
+  const foodRadiusKm = useSettings((s) => s.foodRadiusKm);
 
   const { position } = useGeolocation();
   const { data: liveVenues, isLoading, isError } = useNearbyHalalVenues(
     position?.lat ?? null,
-    position?.lng ?? null
+    position?.lng ?? null,
+    foodRadiusKm * 1000
   );
 
   const venues = liveVenues && liveVenues.length > 0 ? liveVenues : mockHalalVenues;
@@ -43,9 +48,10 @@ export default function HalalFood() {
         v.address.toLowerCase().includes(search.toLowerCase());
       const matchesCuisine = cuisine === "All" || v.cuisine === cuisine;
       const matchesOpen = !openNowOnly || v.isOpen;
-      return matchesSearch && matchesCuisine && matchesOpen;
+      const matchesVerified = !verifiedOnly || v.verified;
+      return matchesSearch && matchesCuisine && matchesOpen && matchesVerified;
     });
-  }, [venues, search, cuisine, openNowOnly]);
+  }, [venues, search, cuisine, openNowOnly, verifiedOnly]);
 
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">
@@ -98,19 +104,20 @@ export default function HalalFood() {
               </motion.button>
             ))}
           </div>
-          <div className="flex gap-2">
-            <motion.button
-              {...pressable}
-              onClick={() => setOpenNowOnly(!openNowOnly)}
-              className={`ios-pill text-[12px] ${
-                openNowOnly
-                  ? "bg-success/15 text-success border border-success/30"
-                  : "bg-secondary text-muted-foreground"
-              }`}
-            >
-              Open now
-            </motion.button>
-          </div>
+          {(openNowOnly || verifiedOnly) && (
+            <div className="flex gap-2">
+              {openNowOnly && (
+                <span className="ios-pill text-[12px] bg-success/15 text-success border border-success/30">
+                  Open now
+                </span>
+              )}
+              {verifiedOnly && (
+                <span className="ios-pill text-[12px] bg-success/15 text-success border border-success/30">
+                  Verified only
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Results count */}

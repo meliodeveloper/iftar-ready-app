@@ -51,7 +51,7 @@ export const pressable = {
 };
 
 export const cardHover = {
-  whileHover: { y: -1 },
+  // whileHover removed — hover states get stuck on touch devices
   whileTap: { scale: 0.985 },
   transition: spring,
 };
