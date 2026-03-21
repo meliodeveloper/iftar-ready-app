@@ -343,7 +343,7 @@ export default function Profile() {
               {/* TODO: replace with final hosted URLs before release */}
               <motion.button
                 {...pressable}
-                onClick={() => openExternal("https://meliodeveloper.github.io/iftar-ready-app/privacy")}
+                onClick={() => openExternal("https://meliodeveloper.github.io/iftar-ready-app/privacy.html")}
                 className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
               >
                 Privacy Policy
@@ -351,7 +351,7 @@ export default function Profile() {
               </motion.button>
               <motion.button
                 {...pressable}
-                onClick={() => openExternal("https://meliodeveloper.github.io/iftar-ready-app/terms")}
+                onClick={() => openExternal("https://meliodeveloper.github.io/iftar-ready-app/terms.html")}
                 className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
               >
                 Terms of Service
