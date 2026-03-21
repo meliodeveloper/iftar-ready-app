@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.meliodeveloper.iftarready',
+  appId: 'com.meliolabs.iftarready',
   appName: 'Iftar Ready',
   webDir: 'dist',
   ios: {
