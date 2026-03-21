@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Bell, Search, ChevronRight, Sparkles } from "lucide-react";
 import { useSettings } from "@/lib/settingsStore";
 import { spring, pressable } from "@/lib/motion";
+import { haptics } from "@/lib/haptics";
 
 type Step = "welcome" | "location" | "location-manual" | "notifications" | "done";
 
@@ -74,10 +75,12 @@ export default function Onboarding() {
     } catch {
       update({ locationMode: "manual", manualLocation: city });
     }
+    haptics.light();
     go("notifications");
   }, [go, update]);
 
   const finish = useCallback(() => {
+    haptics.medium();
     update({ onboardingComplete: true });
   }, [update]);
 

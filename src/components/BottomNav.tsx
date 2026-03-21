@@ -2,6 +2,7 @@ import { Home, MapPin, Utensils, Calendar } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { spring } from "@/lib/motion";
+import { haptics } from "@/lib/haptics";
 
 const navItems = [
   { path: "/", icon: Home, label: "Home" },
@@ -22,7 +23,7 @@ export default function BottomNav() {
           return (
             <motion.button
               key={item.path}
-              onClick={() => navigate(item.path)}
+              onClick={() => { haptics.light(); navigate(item.path); }}
               whileTap={{ scale: 0.9 }}
               transition={spring}
               className="relative flex flex-col items-center justify-center gap-0.5 w-14 h-full"

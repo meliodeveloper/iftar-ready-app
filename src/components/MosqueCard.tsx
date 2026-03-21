@@ -5,6 +5,7 @@ import { pressable } from "@/lib/motion";
 import DirectionButtons from "@/components/DirectionButtons";
 import { useSettings } from "@/lib/settingsStore";
 import { toast } from "sonner";
+import { haptics } from "@/lib/haptics";
 
 interface MosqueCardProps {
   mosque: Mosque;
@@ -22,6 +23,7 @@ export default function MosqueCard({ mosque, expanded, onToggle, compact }: Mosq
   const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${mosque.lat},${mosque.lng}&destination_place_id=${encodeURIComponent(mosque.name)}`;
 
   const setAsDefault = () => {
+    haptics.medium();
     update({ selectedMosqueId: mosque.id, selectedMosqueName: mosque.name });
     toast.success(`${mosque.name} set as your default mosque`);
   };

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, MapPin, ChevronRight, Trash2, ExternalLink, Info, MapPinOff } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSettings, type CalcMethod, type Madhab, type TimeFormat, type ThemePreference, type LocationMode } from "@/lib/settingsStore";
 import { mockMosques } from "@/lib/mockData";
 import { pageTransitionProps, staggerContainer, staggerItem, pressable, spring } from "@/lib/motion";
@@ -81,6 +82,7 @@ export default function Profile() {
   const settings = useSettings();
   const update = useSettings((s) => s.update);
   const clearCache = useSettings((s) => s.clearCache);
+  const queryClient = useQueryClient();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [locationDenied, setLocationDenied] = useState(false);
 
@@ -368,7 +370,7 @@ export default function Profile() {
                 <div className="flex gap-2">
                   <motion.button
                     {...pressable}
-                    onClick={() => { clearCache(); setShowClearConfirm(false); }}
+                    onClick={() => { clearCache(); queryClient.clear(); setShowClearConfirm(false); }}
                     className="flex-1 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-[15px] font-semibold"
                   >
                     Confirm

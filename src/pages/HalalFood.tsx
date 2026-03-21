@@ -8,6 +8,7 @@ import { pageTransitionProps, staggerContainer, staggerItem, pressable } from "@
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useNearbyHalalVenues } from "@/hooks/useNearbyPlaces";
 import { useSettings } from "@/lib/settingsStore";
+import { haptics } from "@/lib/haptics";
 
 export default function HalalFood() {
   const [search, setSearch] = useState("");
@@ -93,7 +94,7 @@ export default function HalalFood() {
               <motion.button
                 key={c}
                 {...pressable}
-                onClick={() => setCuisine(c)}
+                onClick={() => { haptics.light(); setCuisine(c); }}
                 className={`shrink-0 ios-pill ${
                   cuisine === c
                     ? "bg-primary text-primary-foreground"
