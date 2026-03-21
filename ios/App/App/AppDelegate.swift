@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import WebKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -8,6 +9,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("CAPNotificationName"), object: nil, queue: .main) { _ in }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            func findWebView(in view: UIView) -> WKWebView? {
+                if let webView = view as? WKWebView { return webView }
+                for subview in view.subviews {
+                    if let found = findWebView(in: subview) { return found }
+                }
+                return nil
+            }
+            if let rootView = self.window?.rootViewController?.view,
+               let webView = findWebView(in: rootView) {
+                webView.scrollView.bounces = true
+                webView.scrollView.alwaysBounceVertical = true
+                webView.scrollView.showsVerticalScrollIndicator = false
+
+                let isDarkMode = self.window?.traitCollection.userInterfaceStyle == .dark
+                let bgColor = isDarkMode
+                    ? UIColor(red: 0.039, green: 0.059, blue: 0.118, alpha: 1.0)
+                    : UIColor(red: 0.980, green: 0.976, blue: 0.969, alpha: 1.0)
+                webView.scrollView.backgroundColor = bgColor
+                webView.backgroundColor = bgColor
+
+                NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+                    let isDark = self.window?.traitCollection.userInterfaceStyle == .dark
+                    let color = isDark
+                        ? UIColor(red: 0.039, green: 0.059, blue: 0.118, alpha: 1.0)
+                        : UIColor(red: 0.980, green: 0.976, blue: 0.969, alpha: 1.0)
+                    webView.scrollView.backgroundColor = color
+                    webView.backgroundColor = color
+                }
+            }
+        }
         return true
     }
 

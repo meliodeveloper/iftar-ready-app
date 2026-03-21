@@ -113,9 +113,11 @@
     @apply border-border;
   }
 
-  html {
-    /* Prevent pull-to-refresh and over-scroll bounce on iOS PWA */
-    overscroll-behavior: none;
+  html, body {
+    /* Momentum scrolling and hidden scrollbar for Capacitor WebView */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   body {
@@ -123,10 +125,11 @@
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Prevent pull-to-refresh and over-scroll bounce */
-    overscroll-behavior: none;
-    /* Momentum scrolling on iOS */
-    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide WebKit scrollbar (iOS/Safari/Capacitor WebView) */
+  ::-webkit-scrollbar {
+    display: none;
   }
 
   /* Remove 300ms tap delay on all interactive elements */

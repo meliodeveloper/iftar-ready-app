@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { Capacitor } from "@capacitor/core";
+import { Geolocation } from "@capacitor/geolocation";
 import { useSettings } from "@/lib/settingsStore";
 
 interface GeoPosition {
@@ -28,32 +30,49 @@ export function useGeolocation(): UseGeolocationResult {
   const [loading, setLoading] = useState(true);
   const attemptedRef = useRef(false);
 
-  const fetchAuto = useCallback(() => {
+  const fetchAuto = useCallback(async () => {
     setLoading(true);
     setError(null);
     setGeoFailed(false);
 
-    if (!navigator.geolocation) {
-      setError("Geolocation not supported");
-      setGeoFailed(true);
-      setLoading(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
+    if (Capacitor.isNativePlatform()) {
+      // Native iOS/Android — use Capacitor to get a single native permission prompt
+      try {
+        const pos = await Geolocation.getCurrentPosition({ timeout: 10000, enableHighAccuracy: false });
         setDetectedPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         setGeoFailed(false);
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Location unavailable";
+        console.warn("Geolocation error:", msg);
+        setError(msg);
+        setGeoFailed(true);
+      } finally {
         setLoading(false);
-      },
-      (err) => {
-        console.warn("Geolocation error:", err.message);
-        setError(err.message);
+      }
+    } else {
+      // Web / PWA — fall back to navigator.geolocation
+      if (!navigator.geolocation) {
+        setError("Geolocation not supported");
         setGeoFailed(true);
         setLoading(false);
-      },
-      { timeout: 10000, enableHighAccuracy: false }
-    );
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setDetectedPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          setGeoFailed(false);
+          setLoading(false);
+        },
+        (err) => {
+          console.warn("Geolocation error:", err.message);
+          setError(err.message);
+          setGeoFailed(true);
+          setLoading(false);
+        },
+        { timeout: 10000, enableHighAccuracy: false }
+      );
+    }
   }, []);
 
   // Always attempt geolocation on first mount in auto mode
