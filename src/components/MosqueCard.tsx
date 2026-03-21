@@ -1,4 +1,4 @@
-import { MapPin, Navigation, ChevronDown, Star as StarIcon } from "lucide-react";
+import { MapPin, Navigation, ChevronDown, Star as StarIcon, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Mosque } from "@/lib/mockData";
 import { pressable } from "@/lib/motion";
@@ -6,6 +6,7 @@ import DirectionButtons from "@/components/DirectionButtons";
 import { useSettings } from "@/lib/settingsStore";
 import { toast } from "sonner";
 import { haptics } from "@/lib/haptics";
+import { sharePlace } from "@/lib/share";
 
 interface MosqueCardProps {
   mosque: Mosque;
@@ -56,6 +57,13 @@ export default function MosqueCard({ mosque, expanded, onToggle, compact }: Mosq
               <Navigation className="w-3.5 h-3.5" />
               {mosque.distance}
             </span>
+            <motion.button
+              {...pressable}
+              onClick={(e) => { e.stopPropagation(); haptics.light(); sharePlace(mosque.name, mosque.address, 'mosque'); }}
+              className="w-7 h-7 flex items-center justify-center rounded-full bg-secondary"
+            >
+              <Upload className="w-3.5 h-3.5 text-muted-foreground" />
+            </motion.button>
             <motion.div
               animate={{ rotate: expanded ? 180 : 0 }}
               transition={{ duration: 0.2 }}

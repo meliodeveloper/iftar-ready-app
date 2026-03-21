@@ -19,6 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 return nil
             }
+            if let navController = self.window?.rootViewController as? UINavigationController {
+                navController.interactivePopGestureRecognizer?.isEnabled = true
+                navController.interactivePopGestureRecognizer?.delegate = nil
+            }
             if let rootView = self.window?.rootViewController?.view,
                let webView = findWebView(in: rootView) {
                 webView.scrollView.bounces = true

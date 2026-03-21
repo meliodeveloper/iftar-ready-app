@@ -4,7 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, MotionConfig } from "framer-motion";
+import { useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
+import { App as CapApp } from "@capacitor/app";
 import { useSettings } from "@/lib/settingsStore";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 import BottomNav from "@/components/BottomNav";
 import Index from "./pages/Index";
 import Profile from "./pages/Profile";
@@ -36,6 +40,19 @@ function AnimatedRoutes() {
 
 function AppShell() {
   const onboardingComplete = useSettings((s) => s.onboardingComplete);
+  useSwipeBack();
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    const handler = CapApp.addListener("backButton", () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else if (Capacitor.getPlatform() === "android") {
+        CapApp.exitApp();
+      }
+    });
+    return () => { handler.then((h) => h.remove()); };
+  }, []);
 
   if (!onboardingComplete) {
     return <Onboarding />;

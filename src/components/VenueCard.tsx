@@ -1,8 +1,10 @@
-import { MapPin, Navigation, Phone, Star, BadgeCheck, Clock, ChevronDown } from "lucide-react";
+import { MapPin, Navigation, Phone, Star, BadgeCheck, Clock, ChevronDown, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { pressable } from "@/lib/motion";
 import type { HalalVenue } from "@/lib/mockData";
 import DirectionButtons from "@/components/DirectionButtons";
+import { haptics } from "@/lib/haptics";
+import { sharePlace } from "@/lib/share";
 
 interface VenueCardProps {
   venue: HalalVenue;
@@ -56,12 +58,21 @@ export default function VenueCard({ venue, expanded, onToggle }: VenueCardProps)
               {venue.rating}
             </div>
             <span className="text-[13px] text-muted-foreground">{venue.distance}</span>
-            <motion.div
-              animate={{ rotate: expanded ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            </motion.div>
+            <div className="flex items-center gap-1.5">
+              <motion.button
+                {...pressable}
+                onClick={(e) => { e.stopPropagation(); haptics.light(); sharePlace(venue.name, venue.address, 'restaurant'); }}
+                className="w-7 h-7 flex items-center justify-center rounded-full bg-secondary"
+              >
+                <Upload className="w-3.5 h-3.5 text-muted-foreground" />
+              </motion.button>
+              <motion.div
+                animate={{ rotate: expanded ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </motion.div>
+            </div>
           </div>
         </div>
 

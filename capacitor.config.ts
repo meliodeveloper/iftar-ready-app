@@ -7,6 +7,7 @@ const config: CapacitorConfig = {
   ios: {
     scrollEnabled: true,
     bounce: true,
+    allowsLinkPreview: false,
   },
 };
 
