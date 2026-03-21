@@ -12,6 +12,7 @@ import heroImage from "@/assets/ramadan-hero.jpg";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useNearbyMosques } from "@/hooks/useNearbyPlaces";
 import { useTodayPrayerTimes } from "@/hooks/useTodayPrayerTimes";
+import { usePrayerNotifications } from "@/hooks/usePrayerNotifications";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -30,6 +31,9 @@ export default function Index() {
 
   const nearest = liveMosques && liveMosques.length > 0 ? liveMosques[0] : mockMosques[0];
   const prayerTimes = livePrayerTimes ?? mockPrayerTimes;
+
+  const locationKey = position ? `${position.lat},${position.lng}` : null;
+  usePrayerNotifications(livePrayerTimes, locationKey);
 
   return (
     <motion.div {...pageTransitionProps} className="min-h-screen pb-24 bg-gradient-ramadan geometric-pattern">

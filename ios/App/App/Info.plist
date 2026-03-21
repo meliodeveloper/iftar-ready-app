@@ -51,5 +51,7 @@
 	<string>Iftar Ready uses your location to find nearby mosques, halal restaurants, and calculate accurate prayer times for your area.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Iftar Ready uses your location to find nearby mosques, halal restaurants, and calculate accurate prayer times for your area.</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Iftar Ready sends prayer time reminders and Iftar alerts to help you track your fast.</string>
 </dict>
 </plist>

@@ -22,6 +22,9 @@ export interface UserSettings {
   selectedMosqueId: string;
   selectedMosqueName: string;
   notifEnabled: boolean;
+  fajrNotification: boolean;
+  iftarReminderNotification: boolean;
+  suhoorNotification: boolean;
   preIftarMinutes: number;
   dailySuhoorReminder: boolean;
   foodRadiusKm: number;
@@ -48,6 +51,9 @@ const defaults: UserSettings = {
   selectedMosqueId: "",
   selectedMosqueName: "",
   notifEnabled: true,
+  fajrNotification: true,
+  iftarReminderNotification: true,
+  suhoorNotification: true,
   preIftarMinutes: 60,
   dailySuhoorReminder: false,
   foodRadiusKm: 5,

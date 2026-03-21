@@ -275,6 +275,15 @@ export default function Profile() {
                 <Field label="Daily Suhoor reminder">
                   <Toggle checked={settings.dailySuhoorReminder} onChange={(v) => update({ dailySuhoorReminder: v })} />
                 </Field>
+                <Field label="Fajr prayer alert">
+                  <Toggle checked={settings.fajrNotification} onChange={(v) => update({ fajrNotification: v })} />
+                </Field>
+                <Field label="Suhoor ends (30 min before Fajr)">
+                  <Toggle checked={settings.suhoorNotification} onChange={(v) => update({ suhoorNotification: v })} />
+                </Field>
+                <Field label="Iftar reminder (15 min before)">
+                  <Toggle checked={settings.iftarReminderNotification} onChange={(v) => update({ iftarReminderNotification: v })} />
+                </Field>
               </>
             )}
           </Section>
