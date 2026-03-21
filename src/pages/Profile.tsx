@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, MapPin, ChevronRight, Trash2, ExternalLink, Info, MapPinOff } from "lucide-react";
+import { openExternal } from "@/lib/openExternal";
+import pkg from "../../package.json";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSettings, type CalcMethod, type Madhab, type TimeFormat, type ThemePreference, type LocationMode } from "@/lib/settingsStore";
 import { mockMosques } from "@/lib/mockData";
@@ -332,24 +334,29 @@ export default function Profile() {
             <div className="divide-y divide-border rounded-xl bg-secondary overflow-hidden -mx-0.5">
               <motion.button
                 {...pressable}
-                onClick={() => alert("Ramadan Companion\n\nA Ramadan prayer times, mosque finder, and halal food app.\n\nBuilt with React + Supabase.")}
+                onClick={() => alert(`Iftar Ready v${pkg.version}\n\nPrayer times, mosque finder, and halal food for Ramadan.\n\nBuilt with React + Supabase.`)}
                 className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
               >
                 About
                 <ExternalLink className="w-4 h-4 text-muted-foreground" />
               </motion.button>
-              {/* TODO: replace # with real Privacy Policy and Terms of Service URLs */}
-              {["Privacy Policy", "Terms of Service"].map((item) => (
-                <motion.a
-                  key={item}
-                  href="#"
-                  {...pressable}
-                  className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
-                >
-                  {item}
-                  <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                </motion.a>
-              ))}
+              {/* TODO: replace with final hosted URLs before release */}
+              <motion.button
+                {...pressable}
+                onClick={() => openExternal("https://meliodeveloper.github.io/iftar-ready-app/privacy")}
+                className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
+              >
+                Privacy Policy
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </motion.button>
+              <motion.button
+                {...pressable}
+                onClick={() => openExternal("https://meliodeveloper.github.io/iftar-ready-app/terms")}
+                className="flex items-center justify-between w-full px-3.5 py-3 text-[15px] text-foreground transition-colors"
+              >
+                Terms of Service
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </motion.button>
             </div>
 
             {!showClearConfirm ? (
