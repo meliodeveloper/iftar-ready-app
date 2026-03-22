@@ -1,5 +1,22 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+// --- Rate limiting ---
+const RATE_LIMIT = 20; // requests per IP per hour
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+setInterval(() => rateLimitMap.clear(), 60 * 60 * 1000);
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + 60 * 60 * 1000 });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT) return false;
+  entry.count++;
+  return true;
+}
+
 // TODO: Tighten CORS back to specific origins after App Store v1.0 review approval.
 function corsHeaders(_origin: string | null) {
   return {
@@ -17,6 +34,15 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders(origin) });
   }
 
+  // Rate limiting
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  if (!checkRateLimit(ip)) {
+    return new Response(JSON.stringify({ error: "Too many requests" }), {
+      status: 429,
+      headers: { ...corsHeaders(origin), "Content-Type": "application/json" },
+    });
+  }
+
   try {
     const apiKey = Deno.env.get("GOOGLE_PLACES_API_KEY");
     if (!apiKey) {
@@ -27,6 +53,13 @@ serve(async (req) => {
 
     if (!lat || !lng || !type) {
       return new Response(JSON.stringify({ error: "lat, lng, and type are required" }), {
+        status: 400,
+        headers: { ...corsHeaders(origin), "Content-Type": "application/json" },
+      });
+    }
+
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      return new Response(JSON.stringify({ error: "Invalid coordinates" }), {
         status: 400,
         headers: { ...corsHeaders(origin), "Content-Type": "application/json" },
       });

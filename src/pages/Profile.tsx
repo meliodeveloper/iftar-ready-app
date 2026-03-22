@@ -88,6 +88,12 @@ export default function Profile() {
   const queryClient = useQueryClient();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [locationDenied, setLocationDenied] = useState(false);
+  const [localRadiusKm, setLocalRadiusKm] = useState(settings.foodRadiusKm);
+
+  useEffect(() => {
+    const t = setTimeout(() => update({ foodRadiusKm: localRadiusKm }), 500);
+    return () => clearTimeout(t);
+  }, [localRadiusKm]);
 
   useEffect(() => {
     if ("permissions" in navigator) {
@@ -286,15 +292,15 @@ export default function Profile() {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-[15px] text-foreground">Search radius</span>
-                <span className="text-[13px] text-primary font-semibold tabular-nums">{settings.foodRadiusKm} km</span>
+                <span className="text-[13px] text-primary font-semibold tabular-nums">{localRadiusKm} km</span>
               </div>
               <input
                 type="range"
                 min={1}
                 max={20}
                 step={1}
-                value={settings.foodRadiusKm}
-                onChange={(e) => update({ foodRadiusKm: Number(e.target.value) })}
+                value={localRadiusKm}
+                onChange={(e) => setLocalRadiusKm(Number(e.target.value))}
                 className="w-full accent-primary"
               />
               <div className="flex justify-between text-[11px] text-muted-foreground mt-0.5">

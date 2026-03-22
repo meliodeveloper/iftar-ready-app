@@ -30,7 +30,7 @@ export function useNearbyMosques(lat: number | null, lng: number | null, radius 
     queryKey: ["nearby-mosques", lat, lng, radius],
     queryFn: () => fetchNearbyPlaces<Mosque>(lat!, lng!, "mosque", radius),
     enabled: lat !== null && lng !== null,
-    staleTime: 5 * 60 * 1000, // 5 min
+    staleTime: 30 * 60 * 1000, // 30 min
     retry: 1,
   });
 }
